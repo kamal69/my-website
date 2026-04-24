@@ -1,0 +1,304 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RK Real Estate — Admin Dashboard</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background: var(--bg); }
+
+    .dashboard-layout {
+      display: flex;
+      min-height: 100vh;
+      padding-top: 62px;
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0; left: 220px; right: 0;
+      height: 62px;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 36px;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .content-area { flex: 1; padding: 32px 36px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-card:hover { border-color: var(--border-dark); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+    .stat-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-icon.navy   { background: var(--navy-dim);   color: var(--navy); }
+    .stat-icon.green  { background: var(--green-bg);   color: var(--green); }
+    .stat-icon.blue   { background: var(--blue-bg);    color: var(--blue); }
+    .stat-icon.accent { background: var(--accent-dim); color: var(--accent); }
+
+    .stat-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+    .stat-value { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; color: var(--text-primary); line-height: 1; }
+    .stat-change { font-size: 11px; color: var(--green); margin-top: 3px; font-weight: 600; }
+
+    .quick-actions { display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
+
+    .action-pill {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition);
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .action-pill:hover {
+      border-color: var(--navy);
+      color: var(--navy);
+      background: var(--navy-dim);
+      transform: translateY(-1px);
+    }
+
+    .badge-new      { background: var(--green-bg); color: var(--green); border: 1px solid rgba(22,163,74,0.2); }
+    .badge-contacted{ background: var(--blue-bg);  color: var(--blue);  border: 1px solid rgba(37,99,235,0.2); }
+    .badge-closed   { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(184,146,42,0.2); }
+
+    .user-chip {
+      display: flex; align-items: center; gap: 9px;
+      font-size: 13px; font-weight: 500; color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    .avatar-navy {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+    }
+
+    @media (max-width: 900px) {
+      .top-bar { left: 0; }
+      .content-area { padding: 24px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" style="position:fixed;top:0;left:0;height:100vh;z-index:200;">
+  <div style="height:62px;display:flex;align-items:center;padding:0 18px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.15);">
+    <a href="{% url 'index' %}" class="logo" style="font-size:16px;color:var(--white);">
+      <span class="logo-dot"></span>RK Estate
+    </a>
+  </div>
+  <div style="padding:12px 0;">
+    <a href="#" class="active"><i data-lucide="layout-dashboard"></i> Overview</a>
+    <a href="#"><i data-lucide="building-2"></i> Properties</a>
+    <a href="{% url 'leads' %}"><i data-lucide="users"></i> Leads</a>
+    <a href="#"><i data-lucide="bar-chart-3"></i> Reports</a>
+    <a href="#"><i data-lucide="calendar"></i> Site Visits</a>
+  </div>
+  <div style="margin-top:auto;padding:12px 0;border-top:1px solid rgba(255,255,255,0.08);">
+    <a href="#"><i data-lucide="settings"></i> Settings</a>
+    <a href="{% url 'logout' %}" style="color:rgba(239,68,68,0.8)!important;"><i data-lucide="log-out"></i> Logout</a>
+  </div>
+</aside>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div style="font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:7px;">
+    Portal <i data-lucide="chevron-right" style="width:13px;"></i>
+    <span style="color:var(--text-primary);font-weight:600;">Dashboard</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <i data-lucide="bell" style="color:var(--text-muted);cursor:pointer;width:17px;"></i>
+    <div class="user-chip">
+      <div class="avatar-navy">A</div>
+      <span>Admin</span>
+      <i data-lucide="chevron-down" style="width:13px;color:var(--text-muted);"></i>
+    </div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="dashboard-layout">
+  <aside style="width:220px;flex-shrink:0;"></aside>
+
+  <main style="flex:1;">
+    <div class="content-area">
+
+      <!-- PAGE HEADER -->
+      <div style="margin-bottom:26px;">
+        <div class="section-tag">Admin Panel</div>
+        <h1 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--text-primary);">Good Morning, RK Team</h1>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">Here's what's happening with your properties today.</p>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon navy"><i data-lucide="home" style="width:20px;"></i></div>
+          <div>
+            <div class="stat-label">Total Properties</div>
+            <div class="stat-value">145</div>
+            <div class="stat-change">↑ 12 this month</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i data-lucide="user-check" style="width:20px;"></i></div>
+          <div>
+            <div class="stat-label">Active Leads</div>
+            <div class="stat-value">328</div>
+            <div class="stat-change">↑ 24 this week</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue"><i data-lucide="briefcase" style="width:20px;"></i></div>
+          <div>
+            <div class="stat-label">Deals Closed</div>
+            <div class="stat-value">42</div>
+            <div class="stat-change">↑ 5 this month</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon accent"><i data-lucide="indian-rupee" style="width:20px;"></i></div>
+          <div>
+            <div class="stat-label">Revenue</div>
+            <div class="stat-value">4.2 Cr</div>
+            <div class="stat-change">↑ ₹48L this month</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <div class="quick-actions">
+        <a href="{% url 'leads' %}" class="action-pill">
+          <i data-lucide="plus" style="width:12px;"></i> Add Lead
+        </a>
+        <a href="#" class="action-pill">
+          <i data-lucide="building-2" style="width:12px;"></i> Add Property
+        </a>
+        <a href="#" class="action-pill">
+          <i data-lucide="calendar" style="width:12px;"></i> Schedule Visit
+        </a>
+        <a href="#" class="action-pill">
+          <i data-lucide="download" style="width:12px;"></i> Export Report
+        </a>
+      </div>
+
+      <!-- RECENT INQUIRIES -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <h2 style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--text-primary);margin:0;">Recent Inquiries</h2>
+          <a href="#" class="btn btn-outline" style="padding:7px 16px;font-size:11px;">View All</a>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Property Interest</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:11px;">
+                    <div style="width:34px;height:34px;border-radius:50%;background:var(--navy-dim);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">R</div>
+                    <div>
+                      <div style="font-weight:600;color:var(--text-primary);font-size:14px;">Rahul Sharma</div>
+                      <div style="font-size:11px;color:var(--text-muted);">rahul@gmail.com</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="font-size:13px;color:var(--text-secondary);">Skyline Penthouse</td>
+                <td style="font-size:13px;color:var(--text-muted);">2 Apr 2026</td>
+                <td><span class="badge badge-new" style="padding:3px 10px;border-radius:99px;font-size:10px;">NEW</span></td>
+                <td><button style="background:none;border:none;color:var(--text-muted);cursor:pointer;padding:5px;"><i data-lucide="more-horizontal"></i></button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:11px;">
+                    <div style="width:34px;height:34px;border-radius:50%;background:var(--blue-bg);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">A</div>
+                    <div>
+                      <div style="font-weight:600;color:var(--text-primary);font-size:14px;">Amit Patel</div>
+                      <div style="font-size:11px;color:var(--text-muted);">amit.p@outlook.com</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="font-size:13px;color:var(--text-secondary);">Omaxe Villas</td>
+                <td style="font-size:13px;color:var(--text-muted);">1 Apr 2026</td>
+                <td><span class="badge badge-contacted" style="padding:3px 10px;border-radius:99px;font-size:10px;">CONTACTED</span></td>
+                <td><button style="background:none;border:none;color:var(--text-muted);cursor:pointer;padding:5px;"><i data-lucide="more-horizontal"></i></button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:11px;">
+                    <div style="width:34px;height:34px;border-radius:50%;background:var(--accent-dim);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">S</div>
+                    <div>
+                      <div style="font-weight:600;color:var(--text-primary);font-size:14px;">Sunita Kapoor</div>
+                      <div style="font-size:11px;color:var(--text-muted);">sunita.k@gmail.com</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="font-size:13px;color:var(--text-secondary);">Residential Plot</td>
+                <td style="font-size:13px;color:var(--text-muted);">31 Mar 2026</td>
+                <td><span class="badge badge-closed" style="padding:3px 10px;border-radius:99px;font-size:10px;">CLOSED</span></td>
+                <td><button style="background:none;border:none;color:var(--text-muted);cursor:pointer;padding:5px;"><i data-lucide="more-horizontal"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

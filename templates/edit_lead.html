@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Lead — RK Admin</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background: var(--bg); padding: 40px 24px; }
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--white);
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+    }
+    .form-header { margin-bottom: 32px; text-align: center; }
+    .form-header h1 { font-size: 28px; margin-bottom: 8px; }
+    .btn-submit { width: 100%; margin-top: 12px; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 13px; margin-bottom: 24px; text-decoration: none; transition: color 0.2s; }
+    .back-link:hover { color: var(--navy); }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <a href="{% url 'dashboard' %}" class="back-link">
+      <i data-lucide="arrow-left" style="width: 14px;"></i> Back to Dashboard
+    </a>
+    
+    <div class="form-header">
+      <div class="section-tag">Lead Management</div>
+      <h1>Update Information</h1>
+      <p style="font-size: 13px; color: var(--text-muted);">Modify the inquiry details for <b>{{ lead.name }}</b>.</p>
+    </div>
+
+    <form method="POST">
+      {% csrf_token %}
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="name" value="{{ lead.name }}" required>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" name="phone" value="{{ lead.phone }}" required>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label>Email Address</label>
+        <input type="email" name="email" value="{{ lead.email|default:'' }}">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+        <div class="form-group">
+          <label>Property interest</label>
+          <select name="property_interest">
+            {% for code, label in property_choices %}
+              <option value="{{ code }}" {% if lead.property_interest == code %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Preferred Location</label>
+          <select name="preferred_location">
+            {% for code, label in location_choices %}
+              <option value="{{ code }}" {% if lead.preferred_location == code %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label>Estimated Budget</label>
+        <input type="text" name="budget" value="{{ lead.budget|default:'' }}">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 24px;">
+        <label>Message/Notes</label>
+        <textarea name="message">{{ lead.message|default:'' }}</textarea>
+      </div>
+
+      <button type="submit" class="btn btn-submit">Save Changes</button>
+    </form>
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

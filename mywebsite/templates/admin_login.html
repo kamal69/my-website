@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RK Real Estate — Staff Portal</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; }
+
+    .admin-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 40px;
+      background: var(--bg);
+    }
+
+    .admin-card {
+      width: 100%;
+      max-width: 400px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--navy);
+      border-radius: var(--radius-lg);
+      padding: 40px 36px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .admin-icon-wrap {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      background: var(--navy-dim);
+      border: 1px solid rgba(27,46,75,0.15);
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="{% url 'index' %}" class="logo">
+    <span class="logo-dot"></span>
+    <span>RK Real Estate <span class="logo-sub">Premium Properties</span></span>
+  </a>
+  <nav>
+    <a href="{% url 'index' %}">
+      <i data-lucide="arrow-left" style="width: 13px; display: inline; vertical-align: middle;"></i>
+      Back to Site
+    </a>
+  </nav>
+</header>
+
+<div class="admin-wrap">
+  <div class="admin-card">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <div class="admin-icon-wrap">
+        <i data-lucide="shield-check" style="width: 24px; height: 24px;"></i>
+      </div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--text-primary);margin-bottom:6px;">Staff Portal</h2>
+      <p style="font-size:13px;color:var(--text-muted);">Secure access for authorized personnel only.</p>
+    </div>
+
+    <form action="{% url 'dashboard' %}" method="get">
+      <div class="form-group" style="margin-bottom: 18px;">
+        <label>
+          <i data-lucide="user" style="width: 11px; display: inline; vertical-align: middle; margin-right: 3px;"></i>
+          Employee ID
+        </label>
+        <input type="text" name="admin_id" placeholder="e.g. EMP-101" required>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 10px;">
+        <label>
+          <i data-lucide="key" style="width: 11px; display: inline; vertical-align: middle; margin-right: 3px;"></i>
+          Access Key
+        </label>
+        <input type="password" name="password" placeholder="••••••••" required>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;font-size:13px;">
+        <label style="display:flex;align-items:center;gap:7px;cursor:pointer;margin:0;font-size:13px;text-transform:none;letter-spacing:0;font-weight:400;color:var(--text-secondary);">
+          <input type="checkbox" style="width:auto;"> Remember session
+        </label>
+        <a href="#" style="color:var(--navy);font-weight:500;font-size:12px;">Trouble signing in?</a>
+      </div>
+
+      <button type="submit" class="btn" style="width:100%;padding:12px;">
+        <i data-lucide="log-in" style="width:15px;"></i>
+        Authenticate
+      </button>
+    </form>
+
+    <p style="text-align:center;color:var(--text-light);font-size:11px;margin-top:28px;">
+      © 2026 RK Real Estate Group. All rights reserved.
+    </p>
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Mobile Number — RKG Sovereign Realty</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .update-box { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 40px; width: 100%; max-width: 400px; box-shadow: var(--shadow-md); text-align: center; }
+    .update-icon { width: 56px; height: 56px; border-radius: 50%; background: var(--navy-dim); color: var(--navy); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+    .update-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+    .update-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
+    .form-group { text-align: left; margin-bottom: 20px; }
+    .form-label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; }
+    .form-control { width: 100%; padding: 12px 16px; font-family: 'Inter', sans-serif; font-size: 14px; color: var(--text-primary); background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); outline: none; transition: all var(--transition); }
+    .form-control:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(10, 37, 64, 0.1); }
+    .btn-full { width: 100%; padding: 14px; font-size: 14px; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--text-muted); text-decoration: none; margin-top: 24px; transition: color 0.2s; }
+    .back-link:hover { color: var(--navy); }
+  </style>
+</head>
+<body>
+
+<div class="update-box">
+  <div class="update-icon">
+    <i data-lucide="smartphone"></i>
+  </div>
+  <h1 class="update-title">Update Mobile Number</h1>
+  <p class="update-subtitle">Please enter your correct and active mobile number so our team can reach you properly.</p>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label class="form-label">New Mobile Number</label>
+      <input type="tel" name="phone" class="form-control" value="{{ lead.phone }}" required placeholder="e.g. 9876543210">
+    </div>
+    <button type="submit" class="btn btn-full">Save Changes</button>
+  </form>
+
+  <a href="{% url 'profile' %}" class="back-link">
+    <i data-lucide="arrow-left" style="width:14px;"></i> Back to Profile
+  </a>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

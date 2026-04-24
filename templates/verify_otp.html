@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RKG Sovereign Realty — Verify OTP</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body{background:var(--bg);display:flex;align-items:center;justify-content:center;min-height:100vh;}
+    .auth-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px;width:100%;max-width:420px;box-shadow:var(--shadow-md);}
+    .auth-logo{text-align:center;margin-bottom:28px;}
+    .auth-logo img{height:70px;width:auto;margin:0 auto;}
+    .auth-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--text-primary);text-align:center;margin-bottom:6px;}
+    .auth-sub{font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:28px;}
+    .error-msg{display:flex;align-items:center;gap:11px;background:var(--red-bg);border:1px solid rgba(220,38,38,0.2);color:var(--red);padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:18px;}
+    .success-msg{display:flex;align-items:center;gap:11px;background:var(--green-bg);border:1px solid rgba(22,163,74,0.2);color:var(--green);padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:18px;}
+    .info-msg{display:flex;align-items:center;gap:11px;background:var(--accent-dim);border:1px solid rgba(184,146,42,0.2);color:var(--text-primary);padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:18px;}
+  </style>
+</head>
+<body>
+<div class="auth-card">
+  <div class="auth-logo">
+    <img src="{% static 'images/rkg_logo.png' %}" alt="RKG Sovereign Realty">
+  </div>
+  <h2 class="auth-title">Verify Your Inquiry</h2>
+  <p class="auth-sub">Enter the OTP sent to your email to confirm your details.</p>
+  
+  {% if messages %}
+    {% for message in messages %}
+      {% if message.tags == 'error' %}
+        <div class="error-msg"><i data-lucide="x-circle" style="width:16px;"></i>{{ message }}</div>
+      {% elif message.tags == 'success' %}
+        <div class="success-msg"><i data-lucide="check-circle" style="width:16px;"></i>{{ message }}</div>
+      {% else %}
+        <div class="info-msg"><i data-lucide="info" style="width:16px;"></i>{{ message }}</div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+  
+  <form method="post" action="{% url 'verify_otp' %}">
+    {% csrf_token %}
+    <div class="form-group" style="margin-bottom:24px;">
+      <label>Enter 4-Digit OTP</label>
+      <input type="text" name="otp" placeholder="e.g. 1234" required maxlength="4" style="text-align:center; letter-spacing:8px; font-size:24px; font-weight:600;">
+    </div>
+    <button type="submit" class="btn" style="width:100%;padding:12px;">Verify & Submit Inquiry</button>
+  </form>
+  <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:18px;"><a href="{% url 'leads' %}" style="color:var(--text-muted);">← Back to Form</a></p>
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

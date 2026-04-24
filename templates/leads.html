@@ -1,0 +1,204 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RKG Sovereign Realty — Submit Property Inquiry</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background: var(--bg); }
+    .leads-layout { min-height:calc(100vh - 62px); margin-top:62px; display:grid; grid-template-columns:1fr 1.1fr; }
+    .leads-info { background:var(--navy); border-right:1px solid rgba(255,255,255,0.06); padding:60px 48px; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden; }
+    .leads-info::before { content:''; position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px); background-size:56px 56px; }
+    .leads-info-content { position:relative; z-index:2; }
+    .leads-info h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(34px,3.5vw,50px); font-weight:700; line-height:1.1; color:var(--white); margin-top:12px; margin-bottom:16px; }
+    .leads-info h1 em { color:#E5C07B; font-style:italic; }
+    .leads-info-desc { font-size:14px; color:rgba(255,255,255,0.55); line-height:1.7; max-width:380px; margin-bottom:36px; }
+    .feature-list { display:flex; flex-direction:column; gap:16px; }
+    .feature-item { display:flex; align-items:flex-start; gap:14px; }
+    .feature-icon { width:40px; height:40px; border-radius:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#E5C07B; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .feature-item h4 { font-size:13px; font-weight:600; color:rgba(255,255,255,0.9); margin-bottom:3px; }
+    .feature-item p { font-size:12px; color:rgba(255,255,255,0.45); line-height:1.5; }
+    .leads-stats { display:flex; gap:32px; margin-top:36px; padding-top:28px; border-top:1px solid rgba(255,255,255,0.08); }
+    .leads-stat-num { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:700; color:#E5C07B; line-height:1; }
+    .leads-stat-label { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.45); font-weight:600; margin-top:4px; }
+    .leads-form-panel { display:flex; align-items:center; justify-content:center; padding:52px 44px; background:var(--white); }
+    .leads-form-box { width:100%; max-width:500px; }
+    .form-title { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:var(--text-primary); margin-bottom:6px; }
+    .field-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .success-msg { display:flex; align-items:center; gap:11px; background:var(--green-bg); border:1px solid rgba(22,163,74,0.2); color:var(--green); padding:12px 16px; border-radius:var(--radius-sm); font-size:13px; margin-bottom:22px; }
+    .error-msg { display:flex; align-items:center; gap:11px; background:var(--red-bg); border:1px solid rgba(220,38,38,0.2); color:var(--red); padding:12px 16px; border-radius:var(--radius-sm); font-size:13px; margin-bottom:22px; }
+    .privacy-note { display:flex; align-items:center; justify-content:center; gap:5px; font-size:11px; color:var(--text-light); margin-top:14px; }
+    .founders-note { background:var(--accent-dim); border:1px solid rgba(184,146,42,0.25); border-radius:var(--radius-sm); padding:12px 16px; margin-top:24px; font-size:12px; color:var(--text-secondary); line-height:1.6; }
+    @media(max-width:1024px){ .leads-layout{grid-template-columns:1fr} .leads-info{padding:48px 28px;border-right:none;border-bottom:1px solid var(--border)} .leads-form-panel{padding:40px 20px} .field-grid{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="{% url 'index' %}" class="logo">
+    <img src="{% static 'images/rkg_logo.png' %}" alt="RKG Sovereign Realty" class="logo-img">
+  </a>
+  <nav>
+    <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'index' %}#properties">Properties</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'profile' %}" class="btn" style="padding:8px 18px;font-size:12px;">My Account</a>
+    {% else %}
+      <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+  </nav>
+</header>
+
+<div class="leads-layout">
+  <!-- LEFT INFO -->
+  <div class="leads-info">
+    <div class="leads-info-content">
+      <div class="section-tag" style="color:rgba(255,255,255,0.4);">RKG Sovereign Realty</div>
+      <h1>Your Vision,<br><em>Our Expertise.</em></h1>
+      <p class="leads-info-desc">Fill the form and our expert consultants — Kamal Jeet & Rohit Guleria — will personally reach out to curate the best property options for you.</p>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon"><i data-lucide="clock" style="width:17px;"></i></div>
+          <div><h4>2-Hour Response Guarantee</h4><p>Our consultants reach out within 2 hours during business hours.</p></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i data-lucide="map-pin" style="width:17px;"></i></div>
+          <div><h4>All Tricity Locations</h4><p>Chandigarh, Mohali, Zirakpur, Panchkula, Kharar & Haryana.</p></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i data-lucide="shield-check" style="width:17px;"></i></div>
+          <div><h4>RERA-Verified Listings</h4><p>Legally verified, off-market and premium certified properties.</p></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i data-lucide="user-check" style="width:17px;"></i></div>
+          <div><h4>All Property Types</h4><p>Flats, Rooms, Plots, Villas, Commercial, Buildings & Farm Houses.</p></div>
+        </div>
+      </div>
+
+      <div class="leads-stats">
+        <div><div class="leads-stat-num">500+</div><div class="leads-stat-label">Deals Closed</div></div>
+        <div><div class="leads-stat-num">12+</div><div class="leads-stat-label">Years Exp.</div></div>
+        <div><div class="leads-stat-num">98%</div><div class="leads-stat-label">Satisfaction</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT FORM -->
+  <div class="leads-form-panel">
+    <div class="leads-form-box">
+      <div style="margin-bottom:24px;">
+        <p class="section-tag">Start Your Search</p>
+        <h2 class="form-title">Submit Your Inquiry</h2>
+        <p style="font-size:13px;color:var(--text-muted);">Tell us what you need — we'll find your perfect property.</p>
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="error-msg"><i data-lucide="x-circle" style="width:18px;flex-shrink:0;"></i> {{ message }}</div>
+          {% else %}
+            <div class="success-msg"><i data-lucide="check-circle" style="width:18px;flex-shrink:0;"></i> {{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      <form action="{% url 'leads' %}" method="post" id="leadForm">
+        {% csrf_token %}
+
+        <div class="field-grid" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" name="name" placeholder="e.g. Rahul Sharma" required>
+          </div>
+          <div class="form-group">
+            <label>Phone Number *</label>
+            <input type="tel" name="phone" placeholder="+91 98765 43210" required>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label>Email Address *</label>
+          <input type="email" name="email" placeholder="rahul@example.com" required>
+        </div>
+
+        <div class="field-grid" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label>Property Type *</label>
+            <select name="property_interest">
+              <option value="flat">🏢 Flat / Apartment</option>
+              <option value="room">🛏️ Room / PG / Studio</option>
+              <option value="plot">📐 Residential Plot</option>
+              <option value="villa">🏰 Independent Villa</option>
+              <option value="commercial">🏪 Commercial Space</option>
+              <option value="building">🏗️ Building / Complex</option>
+              <option value="farm">🌾 Farm House / Land</option>
+              <option value="other">🤝 Other / Any</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Preferred Location *</label>
+            <select name="preferred_location">
+              <option value="chandigarh">🏛️ Chandigarh</option>
+              <option value="mohali">🏙️ Mohali</option>
+              <option value="zirakpur">🌆 Zirakpur</option>
+              <option value="panchkula">🏘️ Panchkula</option>
+              <option value="kharar">🌅 Kharar</option>
+              <option value="haryana">🗺️ Haryana</option>
+              <option value="other">📍 Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label>Budget Range</label>
+          <select name="budget">
+            <option value="">Select Budget</option>
+            <option value="under_20l">Under ₹20 Lakhs</option>
+            <option value="20l_50l">₹20L – ₹50L</option>
+            <option value="50l_1cr">₹50L – ₹1 Crore</option>
+            <option value="1cr_2cr">₹1Cr – ₹2 Crore</option>
+            <option value="2cr_plus">₹2 Crore+</option>
+            <option value="negotiable">Negotiable / Flexible</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom:24px;">
+          <label>Additional Requirements (Optional)</label>
+          <textarea name="message" rows="3" placeholder="Share your BHK preference, size, nearby landmarks, timeline or any special requirements..."></textarea>
+        </div>
+
+        <button type="submit" class="btn" style="width:100%;padding:13px;font-size:13px;" id="submitBtn">
+          <i data-lucide="send" style="width:15px;"></i>
+          Send My Inquiry to RKG Sovereign Realty
+        </button>
+      </form>
+
+      <div class="privacy-note">
+        <i data-lucide="lock" style="width:12px;"></i>
+        Your data is 100% private. We never share your details with anyone.
+      </div>
+
+      <div class="founders-note">
+        <strong>👑 RKG Sovereign Realty</strong> — Co-founded by <strong>Kamal Jeet</strong> &amp; <strong>Rohit Guleria</strong>. Serving Chandigarh, Mohali, Zirakpur, Panchkula, Kharar &amp; Haryana. <em>Building Royal Futures.</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+  document.getElementById('leadForm').addEventListener('submit', function() {
+    const btn = document.getElementById('submitBtn');
+    btn.innerHTML = '<i data-lucide="loader-2" style="width:15px;"></i> Submitting...';
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    lucide.createIcons();
+  });
+</script>
+</body>
+</html>

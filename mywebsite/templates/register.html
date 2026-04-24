@@ -1,0 +1,226 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RK Real Estate — Create Account</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background: var(--bg); }
+
+    .register-layout {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin-top: 62px;
+    }
+
+    .register-left {
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 52px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .register-left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+
+    .reg-left-content { position: relative; z-index: 2; }
+
+    .reg-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .reg-title em { color: #E5C07B; font-style: italic; }
+
+    .reg-desc { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.65; max-width: 320px; margin-bottom: 40px; }
+
+    .perk-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-md);
+      margin-bottom: 12px;
+      transition: border-color var(--transition);
+    }
+    .perk-row:hover { border-color: rgba(255,255,255,0.14); }
+
+    .perk-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: rgba(184,146,42,0.15);
+      border: 1px solid rgba(184,146,42,0.25);
+      color: #E5C07B;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .perk-label { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); }
+    .perk-sub { font-size: 12px; color: rgba(255,255,255,0.45); }
+
+    .register-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+      background: var(--white);
+    }
+
+    .register-box { width: 100%; max-width: 400px; }
+
+    .success-msg {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--green-bg);
+      border: 1px solid rgba(22,163,74,0.2);
+      color: var(--green);
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .register-layout { grid-template-columns: 1fr; }
+      .register-left { display: none; }
+      .register-right { padding: 40px 24px; }
+    }
+    @media (max-width: 480px) {
+      .input-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="{% url 'index' %}" class="logo">
+    <span class="logo-dot"></span>
+    <span>RK Real Estate <span class="logo-sub">Premium Properties</span></span>
+  </a>
+  <nav>
+    <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'login' %}">Sign In</a>
+  </nav>
+</header>
+
+<div class="register-layout">
+  <!-- LEFT -->
+  <div class="register-left">
+    <div class="reg-left-content">
+      <div class="section-tag" style="color: rgba(255,255,255,0.4);">Join RK Estate</div>
+      <h2 class="reg-title">Start Your<br><em>Property Journey</em></h2>
+      <p class="reg-desc">Create a free account to explore premium listings, save your favourites, and get personalised recommendations.</p>
+
+      <div class="perk-row">
+        <div class="perk-icon"><i data-lucide="building-2" style="width: 16px;"></i></div>
+        <div>
+          <div class="perk-label">500+ Exclusive Listings</div>
+          <div class="perk-sub">Access off-market and verified properties</div>
+        </div>
+      </div>
+      <div class="perk-row">
+        <div class="perk-icon"><i data-lucide="heart" style="width: 16px;"></i></div>
+        <div>
+          <div class="perk-label">Save & Compare</div>
+          <div class="perk-sub">Shortlist your favourite properties</div>
+        </div>
+      </div>
+      <div class="perk-row">
+        <div class="perk-icon"><i data-lucide="headphones" style="width: 16px;"></i></div>
+        <div>
+          <div class="perk-label">Dedicated Support</div>
+          <div class="perk-sub">Personal consultant from day one</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="register-right">
+    <div class="register-box">
+      <div style="margin-bottom: 28px;">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:var(--text-primary);margin-bottom:6px;">Create Account</h2>
+        <p style="font-size:13px;color:var(--text-muted);">Join 2,400+ satisfied property seekers today.</p>
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="success-msg">
+            <i data-lucide="check-circle" style="width: 15px; flex-shrink: 0;"></i>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+
+        <div class="input-row">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" name="fullname" placeholder="Rahul Sharma" required>
+          </div>
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="rahul123" required>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 18px;">
+          <label>Email Address</label>
+          <input type="email" name="email" placeholder="rahul@example.com" required>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 26px;">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn" style="width: 100%; padding: 12px;">
+          <i data-lucide="user-plus" style="width: 15px;"></i>
+          Create My Account
+        </button>
+      </form>
+
+      <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:20px;">
+        Already have an account?
+        <a href="{% url 'login' %}" style="color:var(--navy);font-weight:600;margin-left:4px;">Sign In</a>
+      </p>
+
+      <p style="text-align:center;font-size:11px;color:var(--text-light);margin-top:16px;line-height:1.6;">
+        By creating an account, you agree to our Terms of Service and Privacy Policy.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

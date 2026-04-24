@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule Site Visit — RK Admin</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background: var(--bg); padding: 40px 24px; }
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--white);
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+    }
+    .form-header { margin-bottom: 32px; text-align: center; }
+    .form-header h1 { font-size: 28px; margin-bottom: 8px; }
+    .btn-submit { width: 100%; margin-top: 12px; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 13px; margin-bottom: 24px; text-decoration: none; transition: color 0.2s; }
+    .back-link:hover { color: var(--navy); }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <a href="{% url 'dashboard' %}" class="back-link">
+      <i data-lucide="arrow-left" style="width: 14px;"></i> Back to Dashboard
+    </a>
+    
+    <div class="form-header">
+      <div class="section-tag">Operations</div>
+      <h1>Schedule Visit</h1>
+      <p style="font-size: 13px; color: var(--text-muted);">Assign a site visit for a lead to a specific property.</p>
+    </div>
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label>Select Lead</label>
+        <select name="lead" required>
+          <option value="" disabled selected>— Choose Lead —</option>
+          {% for lead in leads %}
+            <option value="{{ lead.id }}">{{ lead.name }} ({{ lead.phone }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label>Select Property</label>
+        <select name="property" required>
+          <option value="" disabled selected>— Choose Property —</option>
+          {% for prop in properties %}
+            <option value="{{ prop.id }}">{{ prop.title }} ({{ prop.location }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+        <div class="form-group">
+          <label>Visit Date</label>
+          <input type="date" name="visit_date" required>
+        </div>
+        <div class="form-group">
+          <label>Visit Time</label>
+          <input type="time" name="visit_time" required>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 24px;">
+        <label>Additional Notes</label>
+        <textarea name="notes" placeholder="Any specific requirements or instructions for the visit..."></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-submit">Schedule Site Visit</button>
+    </form>
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

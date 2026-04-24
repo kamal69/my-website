@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RKG Sovereign Realty — My Profile</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background: var(--bg); margin-top: 62px; }
+    .profile-wrap { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+    .profile-header { background: var(--navy); border-radius: var(--radius-lg); padding: 32px; display: flex; align-items: center; gap: 24px; margin-bottom: 28px; }
+    .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; color: var(--white); flex-shrink: 0; }
+    .profile-name { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: var(--white); }
+    .profile-email { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+    .leads-table { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow-sm); }
+    .table-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .table-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: var(--text-primary); }
+    table { width: 100%; border-collapse: collapse; }
+    th { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); padding: 12px 20px; text-align: left; background: var(--bg); border-bottom: 1px solid var(--border); }
+    td { padding: 14px 20px; font-size: 13px; color: var(--text-primary); border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--off-white); }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .badge-navy { background: var(--navy-dim); color: var(--navy); }
+    .badge-gold { background: var(--accent-dim); color: var(--accent); }
+    .empty-state { text-align: center; padding: 60px 24px; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+<header id="header">
+  <a href="{% url 'index' %}" class="logo">
+    <img src="{% static 'images/rkg_logo.png' %}" alt="RKG Sovereign Realty" class="logo-img">
+  </a>
+  <nav>
+    <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'leads' %}">New Inquiry</a>
+    {% if user.is_staff %}
+    <a href="{% url 'dashboard' %}" class="btn btn-outline" style="padding:8px 18px;font-size:12px;">Admin Dashboard</a>
+    {% endif %}
+    <a href="{% url 'logout' %}" class="btn btn-outline" style="padding:8px 18px;font-size:12px;">Logout</a>
+  </nav>
+</header>
+
+<div class="profile-wrap">
+  <div class="profile-header">
+    <div class="profile-avatar">{{ user.first_name|first|upper|default:user.username|first|upper }}</div>
+    <div style="flex: 1;">
+      <div class="profile-name">{{ user.first_name|default:user.username }}</div>
+      <div class="profile-email">{{ user.email }}</div>
+      <div style="margin-top:12px; display: flex; gap: 20px; flex-wrap: wrap;">
+        <div style="font-size: 12px; color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 6px;">
+          <i data-lucide="phone" style="width:14px;"></i> {{ latest_phone }}
+        </div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 6px;">
+          <i data-lucide="clipboard-list" style="width:14px;"></i> {{ inquiry_count }} Inquiries
+        </div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 4px;">
+          <i data-lucide="shield-check" style="width:13px;"></i> Number Visibility: On
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="leads-table">
+    <div class="table-header">
+      <div class="table-title">My Property Inquiries</div>
+      <a href="{% url 'leads' %}" class="btn" style="padding:8px 18px;font-size:12px;">
+        <i data-lucide="plus" style="width:14px;"></i> New Inquiry
+      </a>
+    </div>
+    {% if leads %}
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Property Type</th>
+          <th>Location</th>
+          <th>Budget</th>
+          <th>Mobile Number</th>
+          <th>Message</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for lead in leads %}
+        <tr>
+          <td style="color:var(--text-muted);">{{ forloop.counter }}</td>
+          <td><span class="badge badge-navy">{{ lead.get_property_interest_display }}</span></td>
+          <td><span class="badge badge-gold">{{ lead.get_preferred_location_display|default:lead.preferred_location }}</span></td>
+          <td>{{ lead.budget|default:"—" }}</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              {{ lead.phone }}
+              <a href="{% url 'update_phone' lead.id %}" title="Update Mobile Number" style="color:var(--navy);opacity:0.6;transition:all 0.2s;display:flex;align-items:center;" onmouseover="this.style.opacity=1;transform:translateY(-1px);" onmouseout="this.style.opacity=0.6;transform:none;">
+                <i data-lucide="pencil" style="width:14px;height:14px;"></i>
+              </a>
+            </div>
+          </td>
+          <td style="max-width:200px;color:var(--text-muted);">{{ lead.message|default:"—"|truncatechars:60 }}</td>
+          <td style="color:var(--text-muted);white-space:nowrap;">{{ lead.submitted_at|date:"d M Y" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <i data-lucide="inbox" style="width:48px;height:48px;margin-bottom:16px;opacity:0.3;"></i>
+      <p style="font-size:16px;font-weight:600;margin-bottom:8px;">No inquiries yet</p>
+      <p style="font-size:13px;">Submit your first property inquiry and our team will get back to you shortly.</p>
+      <a href="{% url 'leads' %}" class="btn" style="margin-top:20px;display:inline-flex;">Submit Inquiry</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

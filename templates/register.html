@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RKG Sovereign Realty — Register</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body{background:var(--bg);display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
+    .auth-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px;width:100%;max-width:420px;box-shadow:var(--shadow-md);}
+    .auth-logo{text-align:center;margin-bottom:24px;}
+    .auth-logo img{height:70px;width:auto;margin:0 auto;}
+    .auth-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--text-primary);text-align:center;margin-bottom:6px;}
+    .auth-sub{font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:24px;}
+    .error-msg{background:var(--red-bg);border:1px solid rgba(220,38,38,0.2);color:var(--red);padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:16px;}
+  </style>
+</head>
+<body>
+<div class="auth-card">
+  <div class="auth-logo">
+    <img src="{% static 'images/rkg_logo.png' %}" alt="RKG Sovereign Realty">
+  </div>
+  <h2 class="auth-title">Create Account</h2>
+  <p class="auth-sub">RKG Sovereign Realty — Building Royal Futures</p>
+  {% if messages %}{% for message in messages %}<div class="error-msg">{{ message }}</div>{% endfor %}{% endif %}
+  <form method="post" action="{% url 'register' %}">
+    {% csrf_token %}
+    <div class="form-group" style="margin-bottom:14px;"><label>Full Name</label><input type="text" name="fullname" placeholder="Rahul Sharma" required></div>
+    <div class="form-group" style="margin-bottom:14px;"><label>Username</label><input type="text" name="username" placeholder="rahulsharma" required></div>
+    <div class="form-group" style="margin-bottom:14px;"><label>Email Address</label><input type="email" name="email" placeholder="your@email.com" required></div>
+    <div class="form-group" style="margin-bottom:24px;"><label>Password</label><input type="password" name="password" placeholder="Choose a strong password" required></div>
+    <button type="submit" class="btn" style="width:100%;padding:12px;">Create My Account</button>
+  </form>
+  <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:18px;">Already have an account? <a href="{% url 'login' %}" style="color:var(--navy);font-weight:600;">Login</a></p>
+  <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:8px;"><a href="{% url 'index' %}" style="color:var(--text-muted);">← Back to Home</a></p>
+</div>
+</body>
+</html>

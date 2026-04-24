@@ -1,0 +1,909 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RK Real Estate — Premium Properties, Mohali</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background: var(--bg); }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 85vh;
+      display: flex;
+      align-items: center;
+      padding: 100px 60px 60px;
+      position: relative;
+      overflow: hidden;
+      background: #000; /* Fallback */
+    }
+
+    /* ─── SLIDER ─── */
+    .hero-slider {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .hero-slide.active {
+      opacity: 1;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        rgba(15, 23, 42, 0.9) 0%,
+        rgba(15, 23, 42, 0.4) 50%,
+        rgba(15, 23, 42, 0.8) 100%
+      );
+      z-index: 2;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      right: -80px; top: -80px;
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(184,146,42,0.12) 0%, transparent 70%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 640px;
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(184,146,42,0.15);
+      border: 1px solid rgba(184,146,42,0.3);
+      color: #E5C07B;
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(44px, 6vw, 72px);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--white);
+      margin-bottom: 22px;
+    }
+
+    .hero h1 em { font-style: italic; color: #E5C07B; }
+
+    .hero-desc {
+      font-size: 15px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 36px;
+    }
+
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    .btn-hero {
+      background: var(--accent);
+      color: var(--white);
+      padding: 12px 26px;
+      font-size: 13px;
+    }
+    .btn-hero:hover { background: #9E7C22; color: var(--white); }
+
+    .btn-hero-outline {
+      background: rgba(255,255,255,0.07);
+      color: var(--white);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      padding: 12px 26px;
+      font-size: 13px;
+    }
+    .btn-hero-outline:hover { background: rgba(255,255,255,0.12); color: var(--white); }
+
+    .hero-stats {
+      display: flex;
+      gap: 0;
+      margin-top: 56px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .stat-item {
+      flex: 1;
+      padding-right: 32px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+      margin-right: 32px;
+    }
+    .stat-item:last-child { border: none; margin: 0; padding: 0; }
+
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .stat-num span { color: #E5C07B; }
+    .stat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+
+    /* ─── SEARCH ─── */
+    .search-strip {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 60px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .search-field {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .search-field label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ─── SECTIONS ─── */
+    section {
+      padding: 72px 60px;
+      max-width: 1360px;
+      margin: 0 auto;
+    }
+
+    .section-header { margin-bottom: 40px; }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(30px, 3.5vw, 44px);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 6px;
+    }
+
+    .section-divider {
+      width: 36px; height: 2px;
+      background: var(--accent);
+      margin-top: 14px;
+    }
+
+    /* ─── PROPERTY CARDS ─── */
+    .properties-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .prop-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .prop-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--border-dark);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .prop-img-wrap { position: relative; height: 200px; overflow: hidden; background: var(--bg); }
+    .prop-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .prop-card:hover .prop-img { transform: scale(1.05); }
+
+    .prop-badge {
+      position: absolute;
+      top: 12px; left: 12px;
+      background: var(--navy);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .prop-body { padding: 18px 20px; }
+
+    .prop-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .prop-name { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+    .prop-loc { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; display: flex; align-items: center; gap: 5px; }
+
+    .prop-features {
+      display: flex;
+      gap: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .feat-item { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+
+    /* ─── LOCALITY ─── */
+    .locality-grid { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .locality-card {
+      flex: 1;
+      min-width: 140px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .locality-card:hover {
+      border-color: var(--navy);
+      background: var(--navy-dim);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .locality-icon { font-size: 26px; margin-bottom: 10px; }
+    .locality-name { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .locality-count { font-size: 11px; color: var(--accent); font-weight: 600; letter-spacing: 0.06em; }
+
+    /* ─── TYPE CARDS ─── */
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .type-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .type-card:hover {
+      border-color: var(--navy);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .type-emoji { font-size: 32px; margin-bottom: 16px; display: block; }
+    .type-name { font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+    .type-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px; }
+    .type-arrow { font-size: 16px; color: var(--navy); transition: transform var(--transition); }
+    .type-card:hover .type-arrow { transform: translateX(5px); }
+
+    /* ─── TEAM ─── */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .team-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      text-align: center;
+      transition: all var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .team-card:hover { border-color: var(--border-dark); box-shadow: var(--shadow-md); }
+
+    .team-img {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      object-fit: cover;
+      border: 2px solid var(--border);
+    }
+
+    .team-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .team-role { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 12px; }
+
+    .team-contact {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .team-contact i { width: 28px; height: 28px; color: var(--text-muted); cursor: pointer; transition: color var(--transition); }
+    .team-contact i:hover { color: var(--navy); }
+
+    /* ─── CTA ─── */
+    .cta-section {
+      text-align: center;
+      background: var(--navy);
+      padding: 72px 60px;
+      max-width: 100% !important;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+
+    .cta-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(30px, 4vw, 50px);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    .cta-desc { font-size: 15px; color: rgba(255,255,255,0.6); margin-bottom: 36px; position: relative; }
+
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--navy);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 52px 60px 28px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto 40px;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--white);
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .footer-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.7; }
+
+    .footer-col h4 {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 16px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .footer-links { display: flex; flex-direction: column; gap: 9px; }
+    .footer-links a { font-size: 13px; color: rgba(255,255,255,0.55); transition: color var(--transition); }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ─── TICKER ─── */
+    .ticker-wrap {
+      background: var(--accent);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .ticker-inner {
+      display: inline-block;
+      animation: ticker 28s linear infinite;
+      padding: 8px 0;
+    }
+
+    .ticker-inner span {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--white);
+      padding: 0 32px;
+    }
+
+    .ticker-inner span::after { content: '·'; margin-left: 32px; opacity: 0.6; }
+
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ─── REVEAL ─── */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 1024px) {
+      .hero { padding: 100px 28px 56px; }
+      section { padding: 52px 28px; }
+      .search-strip { padding: 18px 28px; }
+      .search-inner { flex-wrap: wrap; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+    }
+
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 40px; }
+      .hero-stats { flex-direction: column; gap: 20px; }
+      .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; padding-right: 0; margin-right: 0; }
+      .stat-item:last-child { border: none; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+      footer { padding: 40px 20px 24px; }
+      .cta-section { padding: 52px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <span>Sector 66 Mohali</span><span>Aerocity Premium Villas</span><span>Kharar Residential Plots</span>
+    <span>Airport Road Commercial</span><span>Sunny Enclave</span><span>RERA Certified</span>
+    <span>Sector 66 Mohali</span><span>Aerocity Premium Villas</span><span>Kharar Residential Plots</span>
+    <span>Airport Road Commercial</span><span>Sunny Enclave</span><span>RERA Certified</span>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header id="header">
+  <a href="{% url 'index' %}" class="logo">
+    <span class="logo-dot"></span>
+    <span>
+      RK Real Estate
+      <span class="logo-sub">Premium Properties Since 2005</span>
+    </span>
+  </a>
+  <nav>
+    <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'dashboard' %}">Properties</a>
+    <a href="{% url 'leads' %}">Consult</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'profile' %}" class="btn" style="padding: 8px 18px; font-size: 12px;">My Account</a>
+    {% else %}
+      <a href="{% url 'login' %}">Login</a>
+      <a href="{% url 'register' %}" class="btn" style="padding: 8px 18px; font-size: 12px;">Get Started</a>
+    {% endif %}
+  </nav>
+</header>
+
+<!-- HERO -->
+<div style="padding-top: 30px;"><!-- ticker offset --></div>
+<div class="hero">
+  <div class="hero-slider">
+    <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1920');"></div>
+    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1600607687940-497f2671cf88?auto=format&fit=crop&q=80&w=1920');"></div>
+    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1920');"></div>
+    <div class="hero-overlay"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-tag">
+      <i data-lucide="award" style="width: 11px;"></i>
+      Mohali's Most Trusted Real Estate Group
+    </div>
+
+    <h1>Find Your<br><em>Perfect Space</em></h1>
+
+    <p class="hero-desc">
+      Premium residential villas, luxury apartments, and commercial spaces across Mohali, Aerocity, Airport Road & Kharar — handpicked for discerning buyers.
+    </p>
+
+    <div class="hero-actions">
+      <a href="{% url 'leads' %}" class="btn btn-hero">
+        <i data-lucide="phone" style="width: 15px;"></i>
+        Book Consultation
+      </a>
+      <a href="{% url 'dashboard' %}" class="btn btn-hero-outline">
+        Explore Properties
+        <i data-lucide="arrow-right" style="width: 15px;"></i>
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">500<span>+</span></div>
+        <div class="stat-label">Closed Deals</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2<span>,</span>400<span>+</span></div>
+        <div class="stat-label">Happy Clients</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">12<span>+</span></div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">₹4<span>Cr+</span></div>
+        <div class="stat-label">Inventory Managed</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH STRIP -->
+<div class="search-strip">
+  <div class="search-inner">
+    <div class="search-field">
+      <label>Location</label>
+      <input type="text" placeholder="Sector 66, Mohali...">
+    </div>
+    <div class="search-field">
+      <label>Property Type</label>
+      <select>
+        <option>All Types</option>
+        <option>Apartments</option>
+        <option>Villas</option>
+        <option>Plots</option>
+        <option>Commercial</option>
+      </select>
+    </div>
+    <div class="search-field">
+      <label>Budget</label>
+      <select>
+        <option>Any Budget</option>
+        <option>Under ₹50L</option>
+        <option>₹50L – ₹1Cr</option>
+        <option>₹1Cr – ₹2Cr</option>
+        <option>₹2Cr+</option>
+      </select>
+    </div>
+    <a href="{% url 'dashboard' %}" class="btn" style="padding: 11px 24px; flex-shrink: 0;">
+      <i data-lucide="search" style="width: 14px;"></i>
+      Search
+    </a>
+  </div>
+</div>
+
+<!-- LOCALITIES -->
+<section class="reveal">
+  <div class="section-header">
+    <div class="section-tag">Explore Locations</div>
+    <h2 class="section-title">Browse by Locality</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="locality-grid">
+    <div class="locality-card" onclick="location.href='{% url 'dashboard' %}';">
+      <div class="locality-icon">🏙️</div>
+      <div class="locality-name">Sector 66, Mohali</div>
+      <div class="locality-count">120+ Properties</div>
+    </div>
+    <div class="locality-card" onclick="location.href='{% url 'dashboard' %}';">
+      <div class="locality-icon">✈️</div>
+      <div class="locality-name">Aerocity</div>
+      <div class="locality-count">85+ Properties</div>
+    </div>
+    <div class="locality-card" onclick="location.href='{% url 'dashboard' %}';">
+      <div class="locality-icon">🛣️</div>
+      <div class="locality-name">Airport Road</div>
+      <div class="locality-count">45+ Properties</div>
+    </div>
+    <div class="locality-card" onclick="location.href='{% url 'dashboard' %}';">
+      <div class="locality-icon">🌆</div>
+      <div class="locality-name">Kharar</div>
+      <div class="locality-count">210+ Properties</div>
+    </div>
+    <div class="locality-card" onclick="location.href='{% url 'dashboard' %}';">
+      <div class="locality-icon">🌅</div>
+      <div class="locality-name">Sunny Enclave</div>
+      <div class="locality-count">95+ Properties</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROPERTY TYPES -->
+<section class="reveal" style="background: var(--off-white); max-width: 100%; padding: 60px;">
+  <div style="max-width: 1360px; margin: 0 auto;">
+    <div class="section-header">
+      <div class="section-tag">What We Offer</div>
+      <h2 class="section-title">Explore by Property Type</h2>
+      <div class="section-divider"></div>
+    </div>
+    <div class="type-grid">
+      <div class="type-card" onclick="location.href='{% url 'dashboard' %}';">
+        <span class="type-emoji">🏢</span>
+        <div class="type-name">Flats & Apartments</div>
+        <div class="type-desc">Ready-to-move homes in prime gated societies with world-class amenities.</div>
+        <div class="type-arrow">→</div>
+      </div>
+      <div class="type-card" onclick="location.href='{% url 'dashboard' %}';">
+        <span class="type-emoji">📐</span>
+        <div class="type-name">Residential Plots</div>
+        <div class="type-desc">Build your dream home on premium plots in well-planned localities.</div>
+        <div class="type-arrow">→</div>
+      </div>
+      <div class="type-card" onclick="location.href='{% url 'dashboard' %}';">
+        <span class="type-emoji">🏰</span>
+        <div class="type-name">Independent Villas</div>
+        <div class="type-desc">Spacious luxury villas designed for an elevated, private lifestyle.</div>
+        <div class="type-arrow">→</div>
+      </div>
+      <div class="type-card" onclick="location.href='{% url 'dashboard' %}';">
+        <span class="type-emoji">🏪</span>
+        <div class="type-name">Commercial Spaces</div>
+        <div class="type-desc">Premium offices, shops, and showrooms in high-footfall business zones.</div>
+        <div class="type-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PROPERTIES -->
+<section class="reveal">
+  <div class="section-header">
+    <div class="section-tag">Handpicked Listings</div>
+    <h2 class="section-title">Featured Properties</h2>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="properties-grid">
+    {% if properties %}
+      {% for property in properties %}
+      <div class="prop-card" onclick="location.href='{% url 'leads' %}';">
+        <div class="prop-img-wrap">
+          {% if property.image %}<img src="{{ property.image.url }}" class="prop-img" alt="{{ property.name }}">
+          {% else %}<div style="height:100%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:56px;">🏠</div>{% endif %}
+          <div class="prop-badge">{{ property.badge|default:"Featured" }}</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">₹{{ property.price }}</div>
+          <div class="prop-name">{{ property.name }}</div>
+          <div class="prop-loc"><i data-lucide="map-pin" style="width:12px;"></i> {{ property.location }}</div>
+          <div class="prop-features">
+            {% if property.beds %}<div class="feat-item">🛏 {{ property.beds }} Beds</div>{% endif %}
+            {% if property.baths %}<div class="feat-item">🚿 {{ property.baths }} Baths</div>{% endif %}
+            {% if property.sqft %}<div class="feat-item">📐 {{ property.sqft }} sqft</div>{% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="prop-card" onclick="location.href='{% url 'leads' %}';">
+        <div class="prop-img-wrap">
+          <img src="{% static 'images/luxury_interior.png' %}" class="prop-img" alt="Luxury Interior">
+          <div class="prop-badge">Featured</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">₹85 Lakhs</div>
+          <div class="prop-name">3BHK Luxury Apartment</div>
+          <div class="prop-loc"><i data-lucide="map-pin" style="width:12px;"></i> Sector 66, Mohali</div>
+          <div class="prop-features">
+            <div class="feat-item">🛏 3 Beds</div>
+            <div class="feat-item">🚿 2 Baths</div>
+            <div class="feat-item">📐 1450 sqft</div>
+          </div>
+        </div>
+      </div>
+      <div class="prop-card" onclick="location.href='{% url 'leads' %}';">
+        <div class="prop-img-wrap">
+          <img src="{% static 'images/modern_villa.png' %}" class="prop-img" alt="Villa">
+          <div class="prop-badge">New Launch</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">₹1.2 Crore</div>
+          <div class="prop-name">4BHK Independent Villa</div>
+          <div class="prop-loc"><i data-lucide="map-pin" style="width:12px;"></i> Sunny Enclave, Kharar</div>
+          <div class="prop-features">
+            <div class="feat-item">🛏 4 Beds</div>
+            <div class="feat-item">🚿 3 Baths</div>
+            <div class="feat-item">📐 2800 sqft</div>
+          </div>
+        </div>
+      </div>
+      <div class="prop-card" onclick="location.href='{% url 'dashboard' %}';">
+        <div class="prop-img-wrap">
+          <div style="font-size:56px;background:var(--bg);height:100%;display:flex;align-items:center;justify-content:center;">🏬</div>
+          <div class="prop-badge">Hot Deal</div>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">₹45 Lakhs</div>
+          <div class="prop-name">Commercial Shop Unit</div>
+          <div class="prop-loc"><i data-lucide="map-pin" style="width:12px;"></i> Airport Road, Mohali</div>
+          <div class="prop-features">
+            <div class="feat-item">🏢 Ground Floor</div>
+            <div class="feat-item">🚗 Parking</div>
+            <div class="feat-item">📐 620 sqft</div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="reveal">
+  <div class="section-header">
+    <div class="section-tag">Our Experts</div>
+    <h2 class="section-title">The Professional Team</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="team-grid">
+    <div class="team-card">
+      <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200" class="team-img" alt="CEO">
+      <div class="team-name">Vikram Malhotra</div>
+      <div class="team-role">Founder & CEO</div>
+      <p style="color:var(--text-muted);font-size:13px;line-height:1.6;">A visionary builder with 20+ years of expertise in luxury real estate and urban development.</p>
+      <div class="team-contact"><i data-lucide="linkedin"></i><i data-lucide="mail"></i></div>
+    </div>
+    <div class="team-card">
+      <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200" class="team-img" alt="Sales Director">
+      <div class="team-name">Anjali Sharma</div>
+      <div class="team-role">Director of Sales</div>
+      <p style="color:var(--text-muted);font-size:13px;line-height:1.6;">Dedicated to finding the perfect match for every investor with deep market insight.</p>
+      <div class="team-contact"><i data-lucide="linkedin"></i><i data-lucide="mail"></i></div>
+    </div>
+    <div class="team-card">
+      <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=200" class="team-img" alt="Portfolio Manager">
+      <div class="team-name">Rahul Verma</div>
+      <div class="team-role">Portfolio Manager</div>
+      <p style="color:var(--text-muted);font-size:13px;line-height:1.6;">Ensuring maximum ROI and seamless property management for commercial clients.</p>
+      <div class="team-contact"><i data-lucide="linkedin"></i><i data-lucide="mail"></i></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section reveal">
+  <div class="section-tag" style="color: rgba(255,255,255,0.5);">Get In Touch</div>
+  <h2 class="cta-title">Ready to Find Your<br><em style="color:#E5C07B;font-style:italic;"> Perfect Space?</em></h2>
+  <p class="cta-desc">Our experts are here to guide you every step of the way.</p>
+  <div class="cta-buttons">
+    <a href="{% url 'leads' %}" class="btn btn-hero">
+      <i data-lucide="phone" style="width:15px;"></i> Schedule a Consultation
+    </a>
+    <a href="{% url 'dashboard' %}" class="btn btn-hero-outline">Browse All Properties →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <a href="{% url 'index' %}" class="footer-logo">RK Real Estate</a>
+      <p class="footer-desc">Premium residential and commercial properties across Mohali, Kharar, Aerocity, and Airport Road. Trusted by 2,400+ satisfied clients since 2005.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Properties</h4>
+      <ul class="footer-links">
+        <li><a href="#">Flats & Apartments</a></li>
+        <li><a href="#">Residential Plots</a></li>
+        <li><a href="#">Independent Villas</a></li>
+        <li><a href="#">Commercial Spaces</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Localities</h4>
+      <ul class="footer-links">
+        <li><a href="#">Sector 66, Mohali</a></li>
+        <li><a href="#">Aerocity</a></li>
+        <li><a href="#">Airport Road</a></li>
+        <li><a href="#">Kharar</a></li>
+        <li><a href="#">Sunny Enclave</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul class="footer-links">
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 RK Real Estate Enterprises. All rights reserved.</p>
+    <p>RERA Certified · Mohali, Punjab</p>
+  </div>
+</footer>
+
+<script>
+  lucide.createIcons();
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 50);
+  });
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.06 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Hero Slider Logic
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.hero-slide');
+  function nextSlide() {
+    slides[currentSlide].classList.remove('active');
+    currentSlide = (currentSlide + 1) % slides.length;
+    slides[currentSlide].classList.add('active');
+  }
+  if (slides.length > 0) {
+    setInterval(nextSlide, 5000);
+  }
+</script>
+</body>
+</html>

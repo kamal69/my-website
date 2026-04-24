@@ -1,0 +1,278 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RK Real Estate — Sign In</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background: var(--bg); }
+
+    .login-layout {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin-top: 62px;
+    }
+
+    /* Left — Brand */
+    .login-left {
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 52px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+
+    .login-left-content { position: relative; z-index: 2; }
+
+    .left-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1.12;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .left-quote em { font-style: italic; color: #E5C07B; }
+
+    .left-sub { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.65; max-width: 320px; margin-bottom: 44px; }
+
+    .feat-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .feat-dot {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      color: #E5C07B;
+      flex-shrink: 0;
+    }
+
+    .feat-text { font-size: 13px; color: rgba(255,255,255,0.55); }
+    .feat-text strong { color: rgba(255,255,255,0.9); display: block; font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+
+    /* Right — Form */
+    .login-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+      background: var(--white);
+    }
+
+    .login-box { width: 100%; max-width: 380px; }
+
+    .login-header { margin-bottom: 32px; }
+    .login-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .login-header p { font-size: 13px; color: var(--text-muted); }
+
+    .error-msg {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--red-bg);
+      border: 1px solid rgba(220,38,38,0.2);
+      color: var(--red);
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .social-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      width: 100%;
+      background: var(--white);
+      color: var(--text-primary);
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      transition: all var(--transition);
+      margin-bottom: 10px;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .social-btn:hover { background: var(--off-white); border-color: var(--border-dark); color: var(--text-primary); }
+
+    @media (max-width: 900px) {
+      .login-layout { grid-template-columns: 1fr; }
+      .login-left { display: none; }
+      .login-right { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="{% url 'index' %}" class="logo">
+    <span class="logo-dot"></span>
+    <span>RK Real Estate <span class="logo-sub">Premium Properties</span></span>
+  </a>
+  <nav>
+    <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'register' %}" class="btn" style="padding: 8px 18px; font-size: 12px;">Create Account</a>
+  </nav>
+</header>
+
+<div class="login-layout">
+  <!-- LEFT BRAND -->
+  <div class="login-left">
+    <div class="login-left-content">
+      <div class="section-tag" style="color: rgba(255,255,255,0.45);">Welcome Back</div>
+      <div class="left-quote">Your <em>Dream Property</em><br>Awaits You</div>
+      <p class="left-sub">Sign in to access exclusive listings, track your inquiries, and connect with our expert consultants.</p>
+      <div class="feat-row">
+        <div class="feat-dot"><i data-lucide="clock" style="width: 15px;"></i></div>
+        <div class="feat-text"><strong>Fast Response</strong>Callback guaranteed within 2 hours</div>
+      </div>
+      <div class="feat-row">
+        <div class="feat-dot"><i data-lucide="shield-check" style="width: 15px;"></i></div>
+        <div class="feat-text"><strong>Verified Listings</strong>RERA-certified, legally cleared properties</div>
+      </div>
+      <div class="feat-row">
+        <div class="feat-dot"><i data-lucide="user" style="width: 15px;"></i></div>
+        <div class="feat-text"><strong>Personal Agent</strong>Dedicated consultant from visit to registration</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT FORM -->
+  <div class="login-right">
+    <div class="login-box">
+      <div class="login-header">
+        <h2>Welcome Back</h2>
+        <p>Sign in to your RK Estate account</p>
+      </div>
+
+      <div id="email-login-form">
+        {% if messages %}
+          {% for message in messages %}
+            <div class="error-msg">
+              <i data-lucide="alert-circle" style="width: 15px; flex-shrink: 0;"></i>
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <form action="{% url 'login' %}" method="post">
+          {% csrf_token %}
+          <div class="form-group" style="margin-bottom: 18px;">
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label style="margin: 0;">Password</label>
+              <a href="#" style="font-size: 12px; color: var(--navy); font-weight: 500;">Forgot password?</a>
+            </div>
+            <input type="password" name="password" placeholder="••••••••" required>
+          </div>
+          <div style="margin-bottom: 22px; font-size: 13px; color: var(--text-muted);">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--text-secondary);">
+              <input type="checkbox" style="width: auto;"> Remember me
+            </label>
+          </div>
+          <button type="submit" class="btn" style="width: 100%; padding: 12px;">
+            Sign In <i data-lucide="arrow-right" style="width: 15px;"></i>
+          </button>
+        </form>
+      </div>
+
+      <div id="phone-login-form" style="display: none;">
+        <div class="form-group" style="margin-bottom: 18px;">
+          <label>Phone Number</label>
+          <div style="display: flex; gap: 9px;">
+            <input type="tel" id="phone_num" placeholder="+91 98765 43210" style="flex: 1;">
+            <button type="button" class="btn" onclick="document.getElementById('otp-group').style.display='block'" style="padding: 0 14px; white-space: nowrap; font-size: 12px; flex-shrink: 0;">Get OTP</button>
+          </div>
+        </div>
+        <div id="otp-group" style="display: none; margin-bottom: 18px;">
+          <div class="form-group">
+            <label>6-Digit OTP</label>
+            <input type="text" placeholder="· · · · · ·" style="letter-spacing: 6px; text-align: center; font-weight: 700; font-size: 18px;">
+          </div>
+          <a href="{% url 'profile' %}" class="btn" style="width: 100%; margin-top: 14px; padding: 12px;">
+            Verify & Login <i data-lucide="arrow-right" style="width: 15px;"></i>
+          </a>
+        </div>
+        <button type="button" class="social-btn" onclick="toggleLogin('email');">
+          <i data-lucide="mail" style="width: 15px;"></i> Back to Email Login
+        </button>
+      </div>
+
+      <div id="social-options">
+        <div class="divider">or continue with</div>
+        <button type="button" class="social-btn" onclick="location.href='{% url 'profile' %}';">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="15" height="15">
+          Continue with Google
+        </button>
+        <button type="button" class="social-btn" onclick="toggleLogin('phone');">
+          <i data-lucide="smartphone" style="width: 15px; color: var(--green);"></i>
+          Continue with Phone OTP
+        </button>
+
+        <p style="text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 24px;">
+          Don't have an account?
+          <a href="{% url 'register' %}" style="color: var(--navy); font-weight: 600; margin-left: 4px;">Sign up free</a>
+        </p>
+        <p style="text-align: center; margin-top: 16px;">
+          <a href="{% url 'admin_login' %}" style="font-size: 11px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px dashed var(--border-dark); padding-bottom: 2px;">
+            Staff / Admin Access →
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+  function toggleLogin(type) {
+    if (type === 'phone') {
+      document.getElementById('email-login-form').style.display = 'none';
+      document.getElementById('social-options').style.display = 'none';
+      document.getElementById('phone-login-form').style.display = 'block';
+    } else {
+      document.getElementById('phone-login-form').style.display = 'none';
+      document.getElementById('email-login-form').style.display = 'block';
+      document.getElementById('social-options').style.display = 'block';
+    }
+  }
+</script>
+</body>
+</html>
