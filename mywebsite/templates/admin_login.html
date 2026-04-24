@@ -69,13 +69,22 @@
       <p style="font-size:13px;color:var(--text-muted);">Secure access for authorized personnel only.</p>
     </div>
 
-    <form action="{% url 'dashboard' %}" method="get">
+    {% if messages %}
+      {% for message in messages %}
+        <div style="padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 20px; text-align: center; {% if message.tags == 'error' %}background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;{% else %}background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form action="{% url 'admin_login' %}" method="post">
+      {% csrf_token %}
       <div class="form-group" style="margin-bottom: 18px;">
         <label>
           <i data-lucide="user" style="width: 11px; display: inline; vertical-align: middle; margin-right: 3px;"></i>
-          Employee ID
+          Employee ID (Username)
         </label>
-        <input type="text" name="admin_id" placeholder="e.g. EMP-101" required>
+        <input type="text" name="username" placeholder="e.g. EMP-101" required>
       </div>
 
       <div class="form-group" style="margin-bottom: 10px;">

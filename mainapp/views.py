@@ -68,6 +68,20 @@ def dashboard_view(request):
     return render(request, 'dashboard.html', context)
 
 def admin_login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            if user.is_staff:
+                login(request, user)
+                return redirect('dashboard')
+            else:
+                messages.error(request, 'Access denied. Only staff members can access this portal.')
+        else:
+            messages.error(request, 'Invalid Employee ID or Access Key.')
+            
     return render(request, 'admin_login.html')
 
 @login_required
