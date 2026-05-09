@@ -122,10 +122,82 @@
     }
 
     @media (max-width: 1024px) {
-      .leads-layout { grid-template-columns: 1fr; }
-      .leads-info { padding: 48px 28px; border-right: none; border-bottom: 1px solid var(--border); }
-      .leads-form-panel { padding: 40px 20px; }
-      .field-grid { grid-template-columns: 1fr; }
+      .leads-layout { grid-template-columns: 1fr; width: 100%; box-sizing: border-box; }
+      .leads-info { padding: 40px 20px; border-right: none; border-bottom: 1px solid var(--border); width: 100%; box-sizing: border-box; }
+      .leads-form-panel { padding: 32px 16px; width: 100%; box-sizing: border-box; }
+      .field-grid { grid-template-columns: 1fr; width: 100%; }
+    }
+
+    /* Mobile Menu Styles */
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--navy);
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      background: var(--white);
+      z-index: 2000;
+      display: none;
+      flex-direction: column;
+      padding: 24px;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      background: #0f172a;
+      z-index: 2000;
+      display: none;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .mobile-menu.active {
+      display: flex;
+    }
+
+    .mobile-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .mobile-links a {
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.85);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      transition: all 0.2s;
+    }
+
+    .mobile-links a:active {
+      background: rgba(184, 146, 42, 0.1);
+      border-color: rgba(184, 146, 42, 0.2);
+      color: #E5C07B;
+    }
+
+    .mobile-links a i {
+      width: 16px;
+      height: 16px;
+      color: #E5C07B;
+    }
+
+    @media (max-width: 768px) {
+      header nav { display: none; }
+      .mobile-toggle { display: block; }
     }
   </style>
 </head>
@@ -145,7 +217,38 @@
       <a href="{% url 'login' %}">Login</a>
     {% endif %}
   </nav>
+  <button class="mobile-toggle" onclick="toggleMobileMenu()">
+    <i data-lucide="menu"></i>
+  </button>
 </header>
+
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu" id="mobileMenu">
+  <div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding: 8px 2px;">
+    <span class="logo" style="color:var(--white); font-size: 14px; font-weight: 600;">
+      <span class="logo-dot" style="width: 6px; height: 6px;"></span> RK Estate
+    </span>
+    <button onclick="toggleMobileMenu()" style="background:rgba(255,255,255,0.06); border:none; color:var(--white); cursor:pointer; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+      <i data-lucide="x" style="width:16px;"></i>
+    </button>
+  </div>
+  
+  <div class="mobile-links">
+    <a href="{% url 'index' %}"><i data-lucide="home"></i> Home</a>
+    <a href="{% url 'dashboard' %}"><i data-lucide="building-2"></i> Properties</a>
+    <a href="{% url 'leads' %}"><i data-lucide="phone"></i> Consult</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'profile' %}"><i data-lucide="user"></i> My Account</a>
+      <a href="{% url 'logout' %}" style="color: #ff4d4d;"><i data-lucide="log-out" style="color: #ff4d4d;"></i> Logout</a>
+    {% else %}
+      <a href="{% url 'login' %}"><i data-lucide="log-in"></i> Login</a>
+    {% endif %}
+  </div>
+
+  <div style="margin-top: auto; padding: 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05);">
+     <p style="font-size: 11px; color: rgba(255,255,255,0.4);">RKG Sovereign Realty © 2026</p>
+  </div>
+</div>
 
 <div class="leads-layout">
 
@@ -265,7 +368,10 @@
 
 </div>
 
-<script>
+  function toggleMobileMenu() {
+    document.getElementById('mobileMenu').classList.toggle('active');
+  }
+
   lucide.createIcons();
   document.getElementById('leadForm').addEventListener('submit', function() {
     const btn = document.getElementById('submitBtn');

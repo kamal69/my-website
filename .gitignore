@@ -1,0 +1,25 @@
+# Python / General
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+env/
+.venv/
+
+# Django Database (Remove this if you want to commit your local database)
+db.sqlite3
+
+# Media and Static Files
+# media/
+# staticfiles/
+
+# Environment Variables
+.env
+.env.local
+
+# IDEs and OS files
+.vscode/
+.idea/
+.DS_Store

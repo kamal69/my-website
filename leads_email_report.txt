@@ -1,0 +1,7 @@
+Total Leads: 6
+Leads with Email: 4
+Leads without Email: 2
+
+Leads missing email:
+- Deepak Verma (9654321087)
+- Suresh Kumar (8877665544)

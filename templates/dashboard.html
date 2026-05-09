@@ -4,291 +4,387 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RK Real Estate — Admin Dashboard</title>
+  <title>RKG Sovereign Realty — Admin Dashboard</title>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    body { background: var(--bg); }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;display:flex;}
 
-    .dashboard-layout {
-      display: flex;
-      min-height: 100vh;
-      padding-top: 62px;
+    /* SIDEBAR */
+    .sidebar{width:240px;min-height:100vh;background:linear-gradient(180deg,#0f172a 0%,#1e293b 100%);border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:200;transition:transform 0.3s ease;}
+    .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.06);}
+    .sidebar-logo img{height:48px;width:auto;object-fit:contain;}
+    .sidebar-tagline{font-size:9px;color:#B8922A;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;margin-top:6px;}
+    .sidebar-section{padding:16px 12px 8px;font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.25);}
+    .sidebar nav{flex:1;padding:8px 12px;}
+    .sidebar nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:13px;font-weight:500;color:rgba(255,255,255,0.55);text-decoration:none;transition:all 0.2s;margin-bottom:2px;border:1px solid transparent;}
+    .sidebar nav a:hover{color:#fff;background:rgba(255,255,255,0.06);}
+    .sidebar nav a.active{color:#fff;background:rgba(184,146,42,0.15);border-color:rgba(184,146,42,0.25);}
+    .sidebar nav a.active i,.sidebar nav a.active svg{color:#B8922A!important;}
+    .sidebar nav a i,.sidebar nav a svg{width:16px!important;height:16px!important;flex-shrink:0;}
+    .sidebar-footer{padding:12px;border-top:1px solid rgba(255,255,255,0.06);margin-top:auto;}
+    .sidebar-footer a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.45);text-decoration:none;transition:all 0.2s;}
+    .sidebar-footer a:hover{color:#fff;background:rgba(255,255,255,0.06);}
+    .sidebar-footer a.logout{color:rgba(239,68,68,0.7);}
+    .sidebar-footer a.logout:hover{color:#ef4444;background:rgba(239,68,68,0.08);}
+
+    /* MAIN */
+    .main{flex:1;margin-left:240px;min-height:100vh;display:flex;flex-direction:column;}
+
+    /* TOP BAR */
+    .topbar{height:62px;background:rgba(15,23,42,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:100;}
+    .topbar-left{display:flex;align-items:center;gap:10px;}
+    .mobile-toggle{display:none;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);width:36px;height:36px;border-radius:8px;align-items:center;justify-content:center;color:#e2e8f0;cursor:pointer;}
+    .breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,0.4);}
+    .breadcrumb span.active{color:#e2e8f0;font-weight:600;}
+    .topbar-right{display:flex;align-items:center;gap:14px;}
+    .notif-btn{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.55);cursor:pointer;transition:all 0.2s;position:relative;}
+    .notif-btn:hover{background:rgba(255,255,255,0.08);color:#fff;}
+    .notif-dot{position:absolute;top:8px;right:8px;width:6px;height:6px;background:#B8922A;border-radius:50%;}
+    .user-badge{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:99px;padding:5px 14px 5px 6px;}
+    .user-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#1B2E4B,#B8922A);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;}
+    .user-badge span{font-size:12px;font-weight:600;color:rgba(255,255,255,0.8);}
+
+    /* CONTENT */
+    .content{padding:28px;flex:1;}
+    .page-header{margin-bottom:28px;}
+    .page-tag{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#B8922A;margin-bottom:6px;}
+    .page-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:#fff;line-height:1.1;}
+    .page-sub{font-size:13px;color:rgba(255,255,255,0.4);margin-top:5px;}
+
+    /* STATS */
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+    .stat-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px;transition:all 0.3s;position:relative;overflow:hidden;}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-line,rgba(255,255,255,0.1));}
+    .stat-card:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);transform:translateY(-2px);}
+    .stat-card.gold::before{background:linear-gradient(90deg,#B8922A,#E5C07B);}
+    .stat-card.green-c::before{background:linear-gradient(90deg,#16a34a,#4ade80);}
+    .stat-card.blue-c::before{background:linear-gradient(90deg,#2563eb,#60a5fa);}
+    .stat-card.purple-c::before{background:linear-gradient(90deg,#7c3aed,#a78bfa);}
+    .stat-icon-box{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+    .stat-icon-box.gold{background:rgba(184,146,42,0.15);color:#B8922A;}
+    .stat-icon-box.green-c{background:rgba(22,163,74,0.12);color:#4ade80;}
+    .stat-icon-box.blue-c{background:rgba(37,99,235,0.12);color:#60a5fa;}
+    .stat-icon-box.purple-c{background:rgba(124,58,237,0.12);color:#a78bfa;}
+    .stat-num{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:#fff;line-height:1;}
+    .stat-lbl{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:6px;}
+    .stat-chg{font-size:11px;color:#4ade80;margin-top:4px;font-weight:600;}
+
+    /* QUICK ACTIONS */
+    .quick-row{display:flex;gap:10px;margin-bottom:28px;flex-wrap:wrap;}
+    .q-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:8px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.7);text-decoration:none;transition:all 0.2s;cursor:pointer;}
+    .q-btn:hover{background:rgba(184,146,42,0.15);border-color:rgba(184,146,42,0.35);color:#E5C07B;}
+    .q-btn i,.q-btn svg{width:14px!important;height:14px!important;}
+
+    /* TABS */
+    .tabs-bar{display:flex;gap:4px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:4px;margin-bottom:20px;width:fit-content;}
+    .tab-btn{padding:8px 18px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;color:rgba(255,255,255,0.45);display:flex;align-items:center;gap:7px;border:none;background:none;}
+    .tab-btn i,.tab-btn svg{width:15px!important;height:15px!important;}
+    .tab-btn.active{background:rgba(184,146,42,0.18);color:#E5C07B;border:1px solid rgba(184,146,42,0.3);}
+
+    /* TABLE CARD */
+    .tbl-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;}
+    .tbl-header{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid rgba(255,255,255,0.06);}
+    .tbl-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:#fff;}
+    .tbl-scroll{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;}
+    thead tr{border-bottom:1px solid rgba(255,255,255,0.06);}
+    thead th{padding:12px 16px;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);text-align:left;white-space:nowrap;}
+    tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.2s;}
+    tbody tr:last-child{border-bottom:none;}
+    tbody tr:hover{background:rgba(255,255,255,0.04);}
+    tbody td{padding:14px 16px;font-size:13px;color:rgba(255,255,255,0.75);vertical-align:middle;}
+    .lead-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#1B2E4B,#2F4E7E);color:#E5C07B;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;border:1px solid rgba(184,146,42,0.2);}
+    .dealer-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#3d2a00,#7a5c1e);color:#E5C07B;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
+    .lead-name{font-weight:600;color:#fff;font-size:13px;}
+    .lead-phone{font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;}
+    .badge-new{display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;font-size:10px;font-weight:700;background:rgba(22,163,74,0.12);color:#4ade80;border:1px solid rgba(22,163,74,0.2);}
+    .action-link{color:rgba(255,255,255,0.3);transition:color 0.2s;padding:4px;}
+    .action-link:hover{color:#fff;}
+    .action-link.gold:hover{color:#B8922A;}
+    .action-link.red:hover{color:#ef4444;}
+    .btn-sm{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:rgba(184,146,42,0.12);border:1px solid rgba(184,146,42,0.25);border-radius:7px;font-size:11px;font-weight:600;color:#E5C07B;text-decoration:none;transition:all 0.2s;}
+    .btn-sm:hover{background:rgba(184,146,42,0.2);color:#E5C07B;}
+    .empty-state{text-align:center;padding:48px 20px;color:rgba(255,255,255,0.25);font-size:14px;}
+
+    /* OVERLAY */
+    .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:150;backdrop-filter:blur(4px);}
+    .sidebar-overlay.active{display:block;}
+
+    @media(max-width:960px){
+      .sidebar{transform:translateX(-100%);}
+      .sidebar.active{transform:translateX(0);}
+      .main{margin-left:0;}
+      .mobile-toggle{display:flex!important;}
+      .stats-grid{grid-template-columns:1fr 1fr;}
+      .content{padding:16px;}
     }
-
-    .top-bar {
-      position: fixed;
-      top: 0; left: 220px; right: 0;
-      height: 62px;
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 36px;
-      z-index: 100;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .content-area { flex: 1; padding: 32px 36px; }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-
-    .stat-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      transition: all var(--transition);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .stat-card:hover { border-color: var(--border-dark); box-shadow: var(--shadow-md); transform: translateY(-2px); }
-
-    .stat-icon {
-      width: 44px; height: 44px;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .stat-icon.navy   { background: var(--navy-dim);   color: var(--navy); }
-    .stat-icon.green  { background: var(--green-bg);   color: var(--green); }
-    .stat-icon.blue   { background: var(--blue-bg);    color: var(--blue); }
-    .stat-icon.accent { background: var(--accent-dim); color: var(--accent); }
-
-    .stat-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
-    .stat-value { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; color: var(--text-primary); line-height: 1; }
-    .stat-change { font-size: 11px; color: var(--green); margin-top: 3px; font-weight: 600; }
-
-    .quick-actions { display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
-
-    .action-pill {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 9px 16px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: all var(--transition);
-      letter-spacing: 0.04em;
-      text-decoration: none;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .action-pill:hover {
-      border-color: var(--navy);
-      color: var(--navy);
-      background: var(--navy-dim);
-      transform: translateY(-1px);
-    }
-
-    .badge-new      { background: var(--green-bg); color: var(--green); border: 1px solid rgba(22,163,74,0.2); }
-    .badge-contacted{ background: var(--blue-bg);  color: var(--blue);  border: 1px solid rgba(37,99,235,0.2); }
-    .badge-closed   { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(184,146,42,0.2); }
-
-    .user-chip {
-      display: flex; align-items: center; gap: 9px;
-      font-size: 13px; font-weight: 500; color: var(--text-primary);
-      cursor: pointer;
-    }
-
-    .avatar-navy {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      background: var(--navy);
-      color: var(--white);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 700;
-    }
-
-    @media (max-width: 900px) {
-      .top-bar { left: 0; }
-      .content-area { padding: 24px 18px; }
+    @media(max-width:480px){
+      .stats-grid{grid-template-columns:1fr;}
+      .quick-row .q-btn span{display:none;}
     }
   </style>
 </head>
 <body>
 
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
 <!-- SIDEBAR -->
-<aside class="sidebar" style="position:fixed;top:0;left:0;height:100vh;z-index:200;">
-  <div style="height:62px;display:flex;align-items:center;padding:0 18px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.15);">
-    <a href="{% url 'index' %}" class="logo" style="font-size:16px;color:var(--white);">
-      <img src="{% static 'images/rkg_logo.png' %}" alt="RKG Sovereign Realty" style="height: 90px; width: auto; object-fit: contain;">
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <a href="{% url 'index' %}">
+      <img src="{% static 'images/rkg_logo.png' %}" alt="RKG Sovereign Realty">
     </a>
+    <div class="sidebar-tagline">Admin Portal</div>
   </div>
-  <div style="padding:12px 0;">
-    <a href="#" class="active"><i data-lucide="layout-dashboard"></i> Overview</a>
-    <a href="#"><i data-lucide="building-2"></i> Properties</a>
-    <a href="{% url 'leads' %}"><i data-lucide="users"></i> Leads</a>
-    <a href="#"><i data-lucide="bar-chart-3"></i> Reports</a>
-    <a href="#"><i data-lucide="calendar"></i> Site Visits</a>
-  </div>
-  <div style="margin-top:auto;padding:12px 0;border-top:1px solid rgba(255,255,255,0.08);">
-    <a href="#"><i data-lucide="settings"></i> Settings</a>
-    <a href="{% url 'logout' %}" style="color:rgba(239,68,68,0.8)!important;"><i data-lucide="log-out"></i> Logout</a>
+
+  <div class="sidebar-section">Main Menu</div>
+  <nav>
+    <a href="{% url 'dashboard' %}" class="active">
+      <i data-lucide="layout-dashboard"></i> Overview
+    </a>
+    <a href="{% url 'add_property' %}">
+      <i data-lucide="building-2"></i> Properties
+    </a>
+    <a href="{% url 'leads' %}">
+      <i data-lucide="users"></i> Leads
+    </a>
+    <a href="{% url 'add_dealer' %}">
+      <i data-lucide="user-plus"></i> Dealers
+    </a>
+    <a href="{% url 'schedule_visit' %}">
+      <i data-lucide="calendar"></i> Site Visits
+    </a>
+    <a href="{% url 'export_leads' %}">
+      <i data-lucide="download"></i> Export Report
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="{% url 'index' %}">
+      <i data-lucide="home"></i> Back to Site
+    </a>
+    <a href="{% url 'logout' %}" class="logout">
+      <i data-lucide="log-out"></i> Logout
+    </a>
   </div>
 </aside>
 
-<!-- TOP BAR -->
-<div class="top-bar">
-  <div style="font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:7px;">
-    Portal <i data-lucide="chevron-right" style="width:13px;"></i>
-    <span style="color:var(--text-primary);font-weight:600;">Dashboard</span>
-  </div>
-  <div style="display:flex;align-items:center;gap:16px;">
-    <i data-lucide="bell" style="color:var(--text-muted);cursor:pointer;width:17px;"></i>
-    <div class="user-chip">
-      <div class="avatar-navy">A</div>
-      <span>Admin</span>
-      <i data-lucide="chevron-down" style="width:13px;color:var(--text-muted);"></i>
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="mobile-toggle" onclick="toggleSidebar()">
+        <i data-lucide="menu" style="width:18px;"></i>
+      </button>
+      <div class="breadcrumb">
+        <span>Portal</span>
+        <i data-lucide="chevron-right" style="width:13px;"></i>
+        <span class="active">Dashboard</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="notif-btn">
+        <i data-lucide="bell" style="width:16px;"></i>
+        <span class="notif-dot"></span>
+      </div>
+      <div class="user-badge">
+        <div class="user-avatar">A</div>
+        <span>Admin</span>
+        <i data-lucide="chevron-down" style="width:13px;color:rgba(255,255,255,0.35);"></i>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- LAYOUT -->
-<div class="dashboard-layout">
-  <aside style="width:220px;flex-shrink:0;"></aside>
+  <!-- CONTENT -->
+  <div class="content">
 
-  <main style="flex:1;">
-    <div class="content-area">
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="page-tag">Admin Panel</div>
+      <div class="page-title">RKG Command Center</div>
+      <div class="page-sub">Welcome back — here's your real estate overview.</div>
+    </div>
 
-      <!-- PAGE HEADER -->
-      <div style="margin-bottom:26px;">
-        <div class="section-tag">Admin Panel</div>
-        <h1 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--text-primary);">Good Morning, RK Team</h1>
-        <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">Here's what's happening with your properties today.</p>
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card gold">
+        <div class="stat-icon-box gold"><i data-lucide="home" style="width:18px;"></i></div>
+        <div class="stat-num">{{ stats.total_properties }}</div>
+        <div class="stat-lbl">Total Properties</div>
+        <div class="stat-chg">↑ Active Listings</div>
       </div>
-
-      <!-- STATS -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon navy"><i data-lucide="home" style="width:20px;"></i></div>
-          <div>
-            <div class="stat-label">Total Properties</div>
-            <div class="stat-value">{{ stats.total_properties }}</div>
-            <div class="stat-change">↑ Active Listings</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon green"><i data-lucide="user-check" style="width:20px;"></i></div>
-          <div>
-            <div class="stat-label">Active Leads</div>
-            <div class="stat-value">{{ stats.active_leads }}</div>
-            <div class="stat-change">↑ Total Database</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon blue"><i data-lucide="briefcase" style="width:20px;"></i></div>
-          <div>
-            <div class="stat-label">Deals Closed</div>
-            <div class="stat-value">{{ stats.deals_closed }}</div>
-            <div class="stat-change">↑ Targeted</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon accent"><i data-lucide="indian-rupee" style="width:20px;"></i></div>
-          <div>
-            <div class="stat-label">Revenue</div>
-            <div class="stat-value">{{ stats.revenue }}</div>
-            <div class="stat-change">↑ Project Volume</div>
-          </div>
-        </div>
+      <div class="stat-card green-c">
+        <div class="stat-icon-box green-c"><i data-lucide="user-check" style="width:18px;"></i></div>
+        <div class="stat-num">{{ stats.active_leads }}</div>
+        <div class="stat-lbl">Active Leads</div>
+        <div class="stat-chg">↑ Total Database</div>
       </div>
-
-      <!-- QUICK ACTIONS -->
-      <div class="quick-actions">
-        <a href="{% url 'leads' %}" class="action-pill">
-          <i data-lucide="plus" style="width:12px;"></i> Add Lead
-        </a>
-        <a href="{% url 'add_property' %}" class="action-pill">
-          <i data-lucide="building-2" style="width:12px;"></i> Add Property
-        </a>
-        <a href="{% url 'schedule_visit' %}" class="action-pill">
-          <i data-lucide="calendar" style="width:12px;"></i> Schedule Visit
-        </a>
-        <a href="{% url 'export_leads' %}" class="action-pill">
-          <i data-lucide="download" style="width:12px;"></i> Export Report
-        </a>
+      <div class="stat-card blue-c">
+        <div class="stat-icon-box blue-c"><i data-lucide="briefcase" style="width:18px;"></i></div>
+        <div class="stat-num">{{ stats.deals_closed }}</div>
+        <div class="stat-lbl">Deals Closed</div>
+        <div class="stat-chg">↑ Targeted</div>
       </div>
+      <div class="stat-card purple-c">
+        <div class="stat-icon-box purple-c"><i data-lucide="indian-rupee" style="width:18px;"></i></div>
+        <div class="stat-num">{{ stats.revenue }}</div>
+        <div class="stat-lbl">Revenue Volume</div>
+        <div class="stat-chg">↑ Project Volume</div>
+      </div>
+    </div>
 
-      <!-- RECENT INQUIRIES -->
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-          <h2 style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--text-primary);margin:0;">Recent Inquiries</h2>
-          <a href="{% url 'leads' %}" class="btn btn-outline" style="padding:7px 16px;font-size:11px;">View All</a>
+    <!-- QUICK ACTIONS -->
+    <div class="quick-row">
+      <a href="{% url 'leads' %}" class="q-btn"><i data-lucide="plus"></i><span>Add Lead</span></a>
+      <a href="{% url 'add_property' %}" class="q-btn"><i data-lucide="building-2"></i><span>Add Property</span></a>
+      <a href="{% url 'add_dealer' %}" class="q-btn"><i data-lucide="users"></i><span>Add Dealer</span></a>
+      <a href="{% url 'schedule_visit' %}" class="q-btn"><i data-lucide="calendar"></i><span>Schedule Visit</span></a>
+      <a href="{% url 'export_leads' %}" class="q-btn"><i data-lucide="download"></i><span>Export CSV</span></a>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('leads-tab',this)" id="leads-tab-btn">
+        <i data-lucide="users"></i> Recent Inquiries
+      </button>
+      <button class="tab-btn" onclick="switchTab('dealers-tab',this)" id="dealers-tab-btn">
+        <i data-lucide="user-plus"></i> Partner Dealers
+      </button>
+    </div>
+
+    <!-- LEADS TAB -->
+    <div id="leads-tab" class="tab-content">
+      <div class="tbl-card">
+        <div class="tbl-header">
+          <div class="tbl-title">Recent Inquiries</div>
+          <a href="{% url 'leads' %}" class="btn-sm"><i data-lucide="external-link" style="width:13px;"></i> View All</a>
         </div>
-
-        <div style="overflow-x:auto;">
+        <div class="tbl-scroll">
           <table>
             <thead>
               <tr>
                 <th>Customer</th>
-                <th>Property Interest</th>
+                <th>Interest</th>
+                <th>Location</th>
                 <th>Date</th>
                 <th>Status</th>
-                <th>Action</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {% for lead in leads %}
               <tr>
                 <td>
-                  <div style="display:flex;align-items:center;gap:11px;">
-                    <div style="width:34px;height:34px;border-radius:50%;background:var(--navy-dim);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">
-                      {{ lead.name|first|upper }}
-                    </div>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div class="lead-avatar">{{ lead.name|first|upper }}</div>
                     <div>
-                      <div style="font-weight:600;color:var(--text-primary);font-size:14px;">{{ lead.name }}</div>
-                      <div style="font-size:11px;color:var(--text-muted);">{{ lead.phone }}</div>
+                      <div class="lead-name">{{ lead.name }}</div>
+                      <div class="lead-phone">{{ lead.phone }}</div>
                     </div>
                   </div>
                 </td>
-                <td style="font-size:13px;color:var(--text-secondary);">{{ lead.get_property_interest_display }}</td>
-                <td style="font-size:13px;color:var(--text-muted);">{{ lead.submitted_at|date:"d M Y" }}</td>
-                <td><span class="badge badge-new" style="padding:3px 10px;border-radius:99px;font-size:10px;">NEW</span></td>
+                <td>{{ lead.get_property_interest_display }}</td>
+                <td>{{ lead.get_preferred_location_display }}</td>
+                <td style="white-space:nowrap;">{{ lead.submitted_at|date:"d M Y" }}</td>
+                <td><span class="badge-new">NEW</span></td>
                 <td>
-                  <div style="display:flex;gap:12px;">
-                    <a href="{% url 'request_correct_number' lead.id %}" title="Request Correct Number" onclick="return confirm('Send email to request correct mobile number?');" style="color:#B8922A;opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6;">
-                      <i data-lucide="phone-off" style="width:16px;"></i>
+                  <div style="display:flex;gap:4px;">
+                    <a href="{% url 'request_correct_number' lead.id %}" class="action-link gold" title="Request Correct Number" onclick="return confirm('Send email to request correct number?');">
+                      <i data-lucide="phone-off" style="width:15px;"></i>
                     </a>
-                    <a href="{% url 'edit_lead' lead.id %}" style="color:var(--navy);opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6;">
-                      <i data-lucide="edit-3" style="width:16px;"></i>
+                    <a href="{% url 'edit_lead' lead.id %}" class="action-link" title="Edit Lead">
+                      <i data-lucide="edit-3" style="width:15px;"></i>
                     </a>
-                    <a href="{% url 'delete_lead' lead.id %}" onclick="return confirm('Are you sure you want to delete this lead?');" style="color:var(--red);opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6;">
-                      <i data-lucide="trash-2" style="width:16px;"></i>
+                    <a href="{% url 'delete_lead' lead.id %}" class="action-link red" title="Delete" onclick="return confirm('Delete this lead?');">
+                      <i data-lucide="trash-2" style="width:15px;"></i>
                     </a>
                   </div>
                 </td>
               </tr>
               {% empty %}
-              <tr>
-                <td colspan="5" style="text-align:center;padding:20px;color:var(--text-muted);">No recent inquiries found.</td>
-              </tr>
+              <tr><td colspan="6"><div class="empty-state">No inquiries yet. They'll appear here once received.</div></td></tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
       </div>
-
     </div>
-  </main>
+
+    <!-- DEALERS TAB -->
+    <div id="dealers-tab" class="tab-content" style="display:none;">
+      <div class="tbl-card">
+        <div class="tbl-header">
+          <div class="tbl-title">Partner Dealers</div>
+          <a href="{% url 'add_dealer' %}" class="btn-sm"><i data-lucide="plus" style="width:13px;"></i> Add Dealer</a>
+        </div>
+        <div class="tbl-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Dealer</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Added On</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for dealer in dealers %}
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <div class="dealer-avatar">{{ dealer.name|first|upper }}</div>
+                    <div class="lead-name">{{ dealer.name }}</div>
+                  </div>
+                </td>
+                <td>{{ dealer.phone }}</td>
+                <td>
+                  {% if dealer.email %}{{ dealer.email }}
+                  {% else %}<span style="color:rgba(239,68,68,0.6);font-size:11px;">Not Provided</span>{% endif %}
+                </td>
+                <td style="white-space:nowrap;">{{ dealer.created_at|date:"d M Y" }}</td>
+                <td>
+                  <div style="display:flex;gap:4px;">
+                    <a href="{% url 'edit_dealer' dealer.id %}" class="action-link" title="Edit">
+                      <i data-lucide="edit-3" style="width:15px;"></i>
+                    </a>
+                    <a href="{% url 'delete_dealer' dealer.id %}" class="action-link red" title="Delete" onclick="return confirm('Remove this dealer?');">
+                      <i data-lucide="trash-2" style="width:15px;"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="5"><div class="empty-state">No dealers added yet.</div></td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<script>lucide.createIcons();</script>
+<script>
+  lucide.createIcons();
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('active');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+  }
+
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).style.display = 'block';
+    btn.classList.add('active');
+  }
+</script>
 </body>
 </html>

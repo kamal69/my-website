@@ -1,0 +1,11 @@
+Total Dealers: 7
+Dealers with Email: 1
+Dealers without Email: 6
+
+Dealers missing email:
+- Mann Sharma estate (9815801444, 8699008181)
+- Manav estate (9872425055, 7973158658)
+- Mohali Estate (9988206114)
+- Deep Associate (9999466665, 9811163770)
+- Chaudhary property consultant (709709661, 7097096663)
+- Narender GBP (9816798343)

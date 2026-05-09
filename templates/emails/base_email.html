@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: 'Inter', Helvetica, Arial, sans-serif; line-height: 1.6; color: #334155; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
+        .header { background: #0f172a; padding: 30px; text-align: center; }
+        .header img { height: 50px; }
+        .content { padding: 40px; }
+        .title { font-size: 24px; font-weight: 700; color: #0f172a; margin-bottom: 20px; font-family: 'Cormorant Garamond', serif; }
+        .info-box { background: #f8fafc; border-radius: 6px; padding: 20px; margin: 20px 0; border-left: 4px solid #b8922a; }
+        .info-item { margin-bottom: 10px; font-size: 14px; }
+        .info-label { font-weight: 700; color: #64748b; width: 120px; display: inline-block; }
+        .footer { background: #f1f5f9; padding: 20px; text-align: center; font-size: 12px; color: #94a3b8; }
+        .btn { display: inline-block; padding: 12px 24px; background: #b8922a; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: 600; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- Logo placeholder -->
+            <h2 style="color: #ffffff; margin: 0; font-family: 'Cormorant Garamond', serif; letter-spacing: 2px;">RKG SOVEREIGN REALTY</h2>
+        </div>
+        <div class="content">
+            <div class="title">{{ subject }}</div>
+            <p>Dear {{ name }},</p>
+            <p>{{ message_intro }}</p>
+            
+            <div class="info-box">
+                {% for label, value in details.items %}
+                <div class="info-item">
+                    <span class="info-label">{{ label }}:</span>
+                    <span class="info-value" style="color: #0f172a; font-weight: 500;">{{ value }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <p>{{ message_outro }}</p>
+            
+            <a href="https://rkgrealty.com" class="btn">Visit Website</a>
+        </div>
+        <div class="footer">
+            &copy; 2026 RKG Sovereign Realty. All rights reserved.<br>
+            Chandigarh Tricity's Most Trusted Realty Partner.
+        </div>
+    </div>
+</body>
+</html>

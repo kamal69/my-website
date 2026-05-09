@@ -23,8 +23,9 @@
       position: fixed;
       top: 0; left: 220px; right: 0;
       height: 62px;
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--glass-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -51,12 +52,13 @@
       background: var(--white);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 28px 30px;
+      padding: 32px;
       display: flex;
       align-items: center;
-      gap: 22px;
-      margin-bottom: 22px;
-      box-shadow: var(--shadow-sm);
+      gap: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-premium);
+      border-left: 5px solid var(--accent);
     }
 
     .profile-avatar {
@@ -101,19 +103,19 @@
 <body>
 
 <!-- SIDEBAR -->
-<aside class="sidebar" style="position:fixed;top:0;left:0;height:100vh;z-index:200;">
+<aside class="sidebar glass" style="position:fixed;top:0;left:0;height:100vh;z-index:200;background:rgba(27, 46, 75, 0.95);border-right:1px solid rgba(255,255,255,0.05);">
   <div style="height:62px;display:flex;align-items:center;padding:0 18px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.15);">
-    <a href="{% url 'index' %}" class="logo" style="font-size:16px;color:var(--white);">
-      <span class="logo-dot"></span>RK Estate
+    <a href="{% url 'index' %}" class="logo" style="font-size:16px;color:var(--white);font-family:'Cormorant Garamond',serif;font-weight:700;letter-spacing:1px;">
+      <span class="logo-dot" style="display:inline-block;width:8px;height:8px;background:var(--accent);border-radius:50%;margin-right:8px;box-shadow:0 0 10px var(--accent);"></span>RK ESTATE
     </a>
   </div>
-  <div style="padding:12px 0;">
+  <div style="padding:20px 0;">
     <a href="#" class="active"><i data-lucide="user"></i> Account Details</a>
     <a href="#"><i data-lucide="heart"></i> Saved Properties</a>
     <a href="#"><i data-lucide="mail"></i> My Enquiries</a>
     <a href="#"><i data-lucide="calendar"></i> Visit Schedule</a>
   </div>
-  <div style="margin-top:auto;padding:12px 0;border-top:1px solid rgba(255,255,255,0.08);">
+  <div style="margin-top:auto;padding:20px 0;border-top:1px solid rgba(255,255,255,0.08);">
     <a href="{% url 'logout' %}" style="color:rgba(239,68,68,0.8)!important;">
       <i data-lucide="log-out"></i> Logout
     </a>

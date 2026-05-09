@@ -55,7 +55,12 @@ body {
   background: var(--bg);
   color: var(--text-primary);
   overflow-x: hidden;
+  width: 100%;
   -webkit-font-smoothing: antialiased;
+}
+html {
+  overflow-x: hidden;
+  width: 100%;
 }
 a { text-decoration: none; color: inherit; }
 img { display: block; max-width: 100%; }
@@ -127,14 +132,36 @@ header nav {
 }
 
 header nav a {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 13px !important;
+  font-weight: 500 !important;
   color: var(--text-secondary);
-  transition: color var(--transition);
+  transition: all var(--transition);
   letter-spacing: 0.01em;
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  line-height: 1 !important;
 }
 
-header nav a:hover { color: var(--navy); }
+header nav a i, 
+header nav a svg {
+  width: 15px !important;
+  height: 15px !important;
+  stroke-width: 1.5px !important;
+  color: var(--accent) !important;
+  opacity: 0.9 !important;
+  transition: all var(--transition);
+}
+
+header nav a:hover { 
+  color: var(--navy); 
+}
+
+header nav a:hover i,
+header nav a:hover svg {
+  opacity: 1 !important;
+  stroke-width: 2px !important;
+}
 
 /* ============================================
    BUTTONS

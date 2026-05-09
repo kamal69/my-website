@@ -57,9 +57,12 @@ class Property(models.Model):
 
 class SiteVisit(models.Model):
     lead = models.ForeignKey(Lead, on_delete=models.CASCADE)
-    property = models.ForeignKey(Property, on_delete=models.CASCADE)
+    property = models.ForeignKey(Property, on_delete=models.SET_NULL, null=True, blank=True)
     visit_date = models.DateField()
     visit_time = models.TimeField()
+    dealer = models.CharField(max_length=200, blank=True, null=True)
+    property_type = models.CharField(max_length=50, blank=True, null=True)
+    location = models.CharField(max_length=100, blank=True, null=True)
     status = models.CharField(max_length=50, default='scheduled', choices=[
         ('scheduled', 'Scheduled'),
         ('completed', 'Completed'),
@@ -69,4 +72,13 @@ class SiteVisit(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Visit for {self.lead.name} at {self.property.title} on {self.visit_date}"
+        return f"Visit for {self.lead.name} at {self.property.title if self.property else 'N/A'} on {self.visit_date}"
+
+class Dealer(models.Model):
+    name = models.CharField(max_length=200)
+    phone = models.CharField(max_length=100)
+    email = models.EmailField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

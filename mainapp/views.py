@@ -1,13 +1,32 @@
 import csv
 import random
 from django.core.mail import send_mail
-from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+import os
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse
-from .models import Lead, Property, SiteVisit
+from .models import Lead, Property, SiteVisit, Dealer
+
+@login_required
+def add_dealer_view(request):
+    if not request.user.is_staff:
+        return redirect('index')
+    
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        phone = request.POST.get('phone')
+        email = request.POST.get('email')
+        
+        Dealer.objects.create(name=name, phone=phone, email=email)
+        messages.success(request, 'Dealer added successfully!')
+        return redirect('dashboard')
+    
+    return render(request, 'add_dealer.html')
 
 def index_view(request):
     return render(request, 'index.html')
@@ -63,6 +82,7 @@ def dashboard_view(request):
     }
     context = {
         'leads': leads,
+        'dealers': Dealer.objects.all().order_by('-created_at'),
         'stats': stats
     }
     return render(request, 'dashboard.html', context)
@@ -276,6 +296,27 @@ def add_property_view(request):
     return render(request, 'add_property.html', context)
 
 @login_required
+def edit_dealer_view(request, dealer_id):
+    dealer = get_object_or_404(Dealer, id=dealer_id)
+    if request.method == 'POST':
+        dealer.name = request.POST.get('name')
+        dealer.phone = request.POST.get('phone')
+        dealer.email = request.POST.get('email')
+        dealer.save()
+        messages.success(request, f'Dealer "{dealer.name}" updated successfully!')
+        return redirect('dashboard')
+    
+    return render(request, 'edit_dealer.html', {'dealer': dealer})
+
+@login_required
+def delete_dealer_view(request, dealer_id):
+    dealer = get_object_or_404(Dealer, id=dealer_id)
+    name = dealer.name
+    dealer.delete()
+    messages.success(request, f'Dealer "{name}" has been removed.')
+    return redirect('dashboard')
+
+@login_required
 def schedule_visit_view(request):
     if not request.user.is_staff:
         return redirect('index')
@@ -285,21 +326,115 @@ def schedule_visit_view(request):
         property_id = request.POST.get('property')
         visit_date = request.POST.get('visit_date')
         visit_time = request.POST.get('visit_time')
+        dealer_id = request.POST.get('dealer')
+        property_type = request.POST.get('property_type')
+        location = request.POST.get('location')
         notes = request.POST.get('notes')
         
-        SiteVisit.objects.create(
+        # Get dealer name if dealer_id is provided
+        dealer_name = ""
+        if dealer_id:
+            try:
+                dealer_obj = Dealer.objects.get(id=dealer_id)
+                dealer_name = f"{dealer_obj.name} ({dealer_obj.phone})"
+            except (Dealer.DoesNotExist, ValueError):
+                dealer_name = dealer_id # fallback if it's text
+
+        visit = SiteVisit.objects.create(
             lead_id=lead_id,
-            property_id=property_id,
+            property_id=property_id if property_id else None,
             visit_date=visit_date,
             visit_time=visit_time,
+            dealer=dealer_name,
+            property_type=property_type,
+            location=location,
             notes=notes
         )
-        messages.success(request, 'Site visit scheduled!')
+
+        # Send Emails
+        from django.conf import settings
+        log_content = f"--- Visit Scheduled at {visit_date} {visit_time} ---\n"
+        try:
+            lead = Lead.objects.get(id=lead_id)
+            
+            # Default to admin email
+            admin_email = settings.EMAIL_HOST_USER
+            dealer_email = admin_email 
+
+            if dealer_id:
+                try:
+                    d_obj = Dealer.objects.get(id=dealer_id)
+                    if d_obj.email:
+                        dealer_email = d_obj.email
+                except:
+                    pass
+
+            # 1. HTML Email to Customer (if email exists)
+            if lead.email:
+                p_type_label = str(property_type).title() if property_type else "Property"
+                customer_subject = f'Site Visit Scheduled: {p_type_label} at {location}'
+                
+                context = {
+                    'subject': customer_subject,
+                    'name': lead.name,
+                    'message_intro': 'Your site visit has been successfully scheduled. Our representative will meet you at the location.',
+                    'details': {
+                        'Date': visit_date,
+                        'Time': visit_time,
+                        'Property Type': p_type_label,
+                        'Location': str(location).title(),
+                        'Assigned Dealer': dealer_name
+                    },
+                    'message_outro': 'Thank you for choosing RKG Sovereign Realty.'
+                }
+                html_message = render_to_string('emails/base_email.html', context)
+                plain_message = strip_tags(html_message)
+                
+                send_mail(customer_subject, plain_message, settings.DEFAULT_FROM_EMAIL, [lead.email], html_message=html_message, fail_silently=False)
+                log_content += f"Sent HTML to Customer: {lead.email}\n"
+
+            # 2. HTML Email to Dealer / Admin
+            dealer_subject = f'NEW SITE VISIT ASSIGNED: {lead.name} ({visit_date})'
+            
+            context_dealer = {
+                'subject': dealer_subject,
+                'name': 'Partner',
+                'message_intro': 'A new site visit has been assigned to you. Please coordinate with the customer accordingly.',
+                'details': {
+                    'Customer Name': lead.name,
+                    'Customer Phone': lead.phone,
+                    'Date': visit_date,
+                    'Time': visit_time,
+                    'Property Type': str(property_type).title(),
+                    'Location': str(location).title(),
+                    'Notes': notes or 'N/A'
+                },
+                'message_outro': 'Please ensure a smooth experience for the client.'
+            }
+            html_dealer = render_to_string('emails/base_email.html', context_dealer)
+            plain_dealer = strip_tags(html_dealer)
+            
+            # Send to both dealer (if different) and admin
+            recipients = list(set([dealer_email, admin_email]))
+            send_mail(dealer_subject, plain_dealer, settings.DEFAULT_FROM_EMAIL, recipients, html_message=html_dealer, fail_silently=False)
+            log_content += f"Sent HTML to Dealer/Admin: {recipients}\n"
+
+        except Exception as e:
+            log_content += f"ERROR: {str(e)}\n"
+            messages.warning(request, f"Visit scheduled but email failed: {str(e)}")
+            print(f"Email Error: {e}")
+
+        # Write log
+        with open(os.path.join(settings.BASE_DIR, 'email_log.txt'), 'a') as f:
+            f.write(log_content + "\n")
+
+        messages.success(request, 'Site visit scheduled successfully!')
         return redirect('dashboard')
     
     context = {
         'leads': Lead.objects.all(),
-        'properties': Property.objects.all()
+        'properties': Property.objects.all(),
+        'dealers': Dealer.objects.all()
     }
     return render(request, 'schedule_visit.html', context)
 

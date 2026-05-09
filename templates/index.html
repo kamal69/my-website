@@ -5,7 +5,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RKG Sovereign Realty — Building Royal Futures</title>
+  
+  <!-- Primary SEO Meta Tags -->
+  <title>RKG Sovereign Realty | Premium Luxury Flats, Plots & Villas in Chandigarh Tricity</title>
+  <meta name="description" content="RKG Sovereign Realty offers the finest luxury flats, residential plots, and commercial spaces in Chandigarh, Mohali, Zirakpur, and Panchkula. Find your dream royal space with the most trusted realty experts in Tricity.">
+  <meta name="keywords" content="Real Estate Chandigarh, Luxury Flats Mohali, Plots in Zirakpur, Panchkula Villas, RKG Sovereign Realty, Buy Property Chandigarh, Commercial Spaces Mohali, Real Estate Agent Chandigarh">
+  <meta name="author" content="RKG Sovereign Realty">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:title" content="RKG Sovereign Realty | Luxury Real Estate in Chandigarh Tricity">
+  <meta property="og:description" content="Discover premium luxury flats, villas, and commercial properties in Chandigarh, Mohali, and Zirakpur. Trusted by 500+ happy families.">
+  <meta property="og:image" content="{% static 'images/rkg_logo.png' %}">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="{{ request.build_absolute_uri }}">
+  <meta property="twitter:title" content="RKG Sovereign Realty | Luxury Real Estate">
+  <meta property="twitter:description" content="Discover premium luxury properties in Chandigarh Tricity. Trusted by 500+ happy families.">
+  <meta property="twitter:image" content="{% static 'images/rkg_logo.png' %}">
+
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600&family=Inter:wght@300;400;500;600;700&display=swap"
@@ -196,17 +218,16 @@
 
     .search-field {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
     }
 
     .search-field label {
+      display: block;
       font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--text-muted);
+      margin-bottom: 6px;
     }
 
     section {
@@ -684,9 +705,9 @@
       }
     }
 
-    @media(max-width:640px) {
+    @media (max-width: 640px) {
       .hero h1 {
-        font-size: 40px
+        font-size: 24px;
       }
 
       .hero-stats {
@@ -744,22 +765,59 @@
     <a href="{% url 'index' %}" class="logo">
       <img src="{% static 'images/rkg_logo.png' %}" alt="RKG Sovereign Realty" class="logo-img">
     </a>
-    <nav>
-      <a href="{% url 'index' %}">Home</a>
-      <a href="#properties">Properties</a>
-      <a href="#locations">Locations</a>
-      <a href="{% url 'leads' %}">Consult</a>
+    
+    <!-- Desktop Nav -->
+    <nav class="desktop-nav">
+      <a href="{% url 'index' %}"><i data-lucide="home"></i> Home</a>
+      <a href="#properties"><i data-lucide="building-2"></i> Properties</a>
+      <a href="#locations"><i data-lucide="map-pin"></i> Locations</a>
+      <a href="{% url 'leads' %}"><i data-lucide="phone"></i> Consult</a>
       {% if user.is_authenticated %}
-      <a href="{% url 'profile' %}" class="btn" style="padding:8px 18px;font-size:12px;">My Account</a>
+      <a href="{% url 'profile' %}" class="btn" style="padding:8px 18px;font-size:12px;"><i data-lucide="user"></i> My Account</a>
       {% else %}
-      <a href="{% url 'login' %}">Login</a>
-      <a href="{% url 'register' %}" class="btn" style="padding:8px 18px;font-size:12px;">Get Started</a>
+      <a href="{% url 'login' %}"><i data-lucide="log-in"></i> Login</a>
+      <a href="{% url 'register' %}" class="btn" style="padding:8px 18px;font-size:12px;"><i data-lucide="user-plus"></i> Get Started</a>
       {% endif %}
     </nav>
+
+    <!-- Mobile Toggle -->
+    <button class="mobile-toggle" onclick="toggleMobileMenu()">
+      <i data-lucide="menu"></i>
+    </button>
   </header>
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="close-menu" onclick="toggleMobileMenu()">
+      <i data-lucide="x" style="width:18px;"></i>
+    </button>
+
+    <div style="margin-bottom: 8px;">
+      <img src="{% static 'images/rkg_logo.png' %}" alt="RKG Sovereign Realty" style="height:40px;width:auto;">
+    </div>
+    <div style="font-size:10px;color:var(--accent);font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;">Building Royal Futures</div>
+    
+    <div class="mobile-links">
+      <a href="{% url 'index' %}"><i data-lucide="home"></i> Home</a>
+      <a href="#properties" onclick="toggleMobileMenu()"><i data-lucide="building-2"></i> Properties</a>
+      <a href="#locations" onclick="toggleMobileMenu()"><i data-lucide="map-pin"></i> Locations</a>
+      <a href="{% url 'leads' %}"><i data-lucide="phone"></i> Consult</a>
+      {% if user.is_authenticated %}
+      <a href="{% url 'profile' %}"><i data-lucide="user"></i> My Account</a>
+      <a href="{% url 'logout' %}" style="color:#ff6b6b;"><i data-lucide="log-out" style="color:#ff6b6b;"></i> Logout</a>
+      {% else %}
+      <a href="{% url 'login' %}"><i data-lucide="log-in"></i> Login</a>
+      <a href="{% url 'register' %}"><i data-lucide="user-plus"></i> Register</a>
+      {% endif %}
+    </div>
+
+    <div style="margin-top:auto;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
+      <p style="font-size:11px;color:rgba(255,255,255,0.3);">RKG Sovereign Realty © 2026</p>
+      <p style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:4px;">RERA Certified · Chandigarh Tricity</p>
+    </div>
+  </div>
 
   <!-- TICKER OFFSET -->
-  <div style="padding-top:30px;"></div>
+  <div style="padding-top:64px;"></div>
 
   <!-- HERO -->
   <div class="hero">
@@ -1004,9 +1062,10 @@
       </div>
       <div class="prop-card" onclick="location.href='{% url 'leads' %}';">
         <div class="prop-img-wrap">
-          <div
-            style="font-size:56px;background:var(--bg);height:100%;display:flex;align-items:center;justify-content:center;">
-            🏪</div>
+          <div style="height:100%;background:linear-gradient(135deg,#1B2E4B 0%,#2F4E7E 60%,#B8922A 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+            <span style="font-size:48px;">🏪</span>
+            <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.7);">Commercial SCO</span>
+          </div>
           <div class="prop-badge">Hot Deal</div>
         </div>
         <div class="prop-body">
@@ -1022,9 +1081,10 @@
       </div>
       <div class="prop-card" onclick="location.href='{% url 'leads' %}';">
         <div class="prop-img-wrap">
-          <div
-            style="font-size:56px;background:var(--bg);height:100%;display:flex;align-items:center;justify-content:center;">
-            📐</div>
+          <div style="height:100%;background:linear-gradient(135deg,#2d4a22 0%,#3d6b2e 55%,#6aab45 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+            <span style="font-size:48px;">📐</span>
+            <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.7);">Residential Plot</span>
+          </div>
           <div class="prop-badge">Ready Plot</div>
         </div>
         <div class="prop-body">
@@ -1040,9 +1100,10 @@
       </div>
       <div class="prop-card" onclick="location.href='{% url 'leads' %}';">
         <div class="prop-img-wrap">
-          <div
-            style="font-size:56px;background:var(--bg);height:100%;display:flex;align-items:center;justify-content:center;">
-            🛏️</div>
+          <div style="height:100%;background:linear-gradient(135deg,#3b1f5e 0%,#5a2d82 55%,#9b59b6 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+            <span style="font-size:48px;">🛏️</span>
+            <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.7);">Room / PG / Studio</span>
+          </div>
           <div class="prop-badge">PG Available</div>
         </div>
         <div class="prop-body">
@@ -1058,9 +1119,10 @@
       </div>
       <div class="prop-card" onclick="location.href='{% url 'leads' %}';">
         <div class="prop-img-wrap">
-          <div
-            style="font-size:56px;background:var(--bg);height:100%;display:flex;align-items:center;justify-content:center;">
-            🌾</div>
+          <div style="height:100%;background:linear-gradient(135deg,#1a3a1a 0%,#2d5c2d 50%,#B8922A 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+            <span style="font-size:48px;">🌾</span>
+            <span style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.7);">Farm House / Land</span>
+          </div>
           <div class="prop-badge">Farm House</div>
         </div>
         <div class="prop-body">
@@ -1093,10 +1155,10 @@
       <div class="team-grid">
         <div class="team-card">
           <div class="team-avatar">KJ</div>
-          <div class="team-name">Kamal Jeet</div>
+          <div class="team-name">Kamal</div>
           <div class="team-role">Co-Founder · RKG Sovereign Realty</div>
           <p style="color:var(--text-muted);font-size:13px;line-height:1.7;">A seasoned real estate professional with
-            deep roots in Chandigarh Tricity. Kamal Jeet leads client relations and property sourcing with a
+            deep roots in Chandigarh Tricity. Kamal leads client relations and property sourcing with a
             client-first approach, ensuring every buyer finds their perfect space.</p>
           <div
             style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:center;gap:16px;font-size:12px;color:var(--accent);font-weight:600;">
@@ -1105,14 +1167,24 @@
         </div>
         <div class="team-card">
           <div class="team-avatar" style="background:var(--accent);">RG</div>
-          <div class="team-name">Rohit Guleria</div>
+          <div class="team-name">Rohit</div>
           <div class="team-role">Co-Founder · RKG Sovereign Realty</div>
-          <p style="color:var(--text-muted);font-size:13px;line-height:1.7;">Rohit Guleria brings expertise in property
+          <p style="color:var(--text-muted);font-size:13px;line-height:1.7;">Rohit brings expertise in property
             investment, legal documentation and market analysis. His vision of "Building Royal Futures" drives the
             company's mission to deliver trusted, RERA-certified real estate solutions.</p>
           <div
             style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:center;gap:16px;font-size:12px;color:var(--accent);font-weight:600;">
             <span>📍 Chandigarh, UT</span>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" style="background:#5D5C61;">VP</div>
+          <div class="team-name">Vipin</div>
+          <div class="team-role">Co-Founder · RKG Sovereign Realty</div>
+          <p style="color:var(--text-muted);font-size:13px;line-height:1.7;">Vipin brings a fresh perspective to modern real estate, ensuring seamless operations and innovative strategies. His dedication elevates the client experience across every transaction.</p>
+          <div
+            style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:center;gap:16px;font-size:12px;color:var(--accent);font-weight:600;">
+            <span>📍 Zirakpur, Punjab</span>
           </div>
         </div>
       </div>
@@ -1142,7 +1214,7 @@
         </a>
         <div class="footer-tagline">Building Royal Futures</div>
         <p class="footer-desc">RKG Sovereign Realty — your trusted real estate partner across Chandigarh, Mohali,
-          Zirakpur, Panchkula, Kharar and Haryana. Co-founded by Kamal Jeet & Rohit Guleria.</p>
+          Zirakpur, Panchkula, Kharar and Haryana. Co-founded by Kamal, Rohit & Vipin.</p>
       </div>
       <div class="footer-col">
         <h4>Properties</h4>
@@ -1172,26 +1244,47 @@
           <li><a href="{% url 'index' %}">About Us</a></li>
           <li><a href="{% url 'leads' %}">Contact Us</a></li>
           <li><a href="{% url 'register' %}">Register</a></li>
+          {% if user.is_staff %}
           <li><a href="/admin/">Admin Panel</a></li>
+          {% endif %}
           <li><a href="{% url 'leads' %}">Privacy Policy</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 RKG Sovereign Realty. All rights reserved. | Co-founders: Kamal Jeet & Rohit Guleria</p>
+      <p>© 2026 RKG Sovereign Realty. All rights reserved. | Co-founders: Kamal, Rohit & Vipin</p>
       <p>RERA Certified · Chandigarh Tricity & Haryana</p>
     </div>
   </footer>
 
   <script>
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('active');
+    }
+
     lucide.createIcons();
     const header = document.getElementById('header');
     window.addEventListener('scroll', () => { header.classList.toggle('scrolled', window.scrollY > 50); });
-    const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.06 });
+    
+    // Reveal animations
+    const obs = new IntersectionObserver(entries => { 
+      entries.forEach(e => { 
+        if (e.isIntersecting) e.target.classList.add('visible'); 
+      }); 
+    }, { threshold: 0.06 });
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    
+    // Hero Slider
     let currentSlide = 0;
     const slides = document.querySelectorAll('.hero-slide');
-    function nextSlide() { slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }
+    function nextSlide() { 
+      if (slides.length > 0) {
+        slides[currentSlide].classList.remove('active'); 
+        currentSlide = (currentSlide + 1) % slides.length; 
+        slides[currentSlide].classList.add('active'); 
+      }
+    }
     if (slides.length > 0) setInterval(nextSlide, 5000);
   </script>
 </body>
